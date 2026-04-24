@@ -141,6 +141,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .sets-guide{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r);background:var(--accent-bg);margin-bottom:10px;font-size:12px;color:var(--accent-text);}
 .col-labels{display:grid;grid-template-columns:32px 1fr 1fr 36px;gap:8px;margin-bottom:6px;}
 .col-lbl{font-size:11px;color:var(--text3);text-align:center;}
+.ol-info{cursor:pointer;color:var(--accent);font-size:14px;user-select:none;}
+.ol-tip{font-size:11px;color:var(--text2);background:var(--accent-bg);border-left:2px solid var(--accent);padding:6px 8px;border-radius:6px;margin-bottom:8px;}
 .set-row{display:grid;grid-template-columns:32px 1fr 1fr 36px;gap:8px;align-items:center;margin-bottom:8px;}
 .set-num{font-size:13px;color:var(--text3);text-align:center;}
 .set-input{width:100%;padding:10px 8px;font-size:16px;text-align:center;border:0.5px solid var(--border2);border-radius:10px;background:var(--bg);color:var(--text);-webkit-appearance:none;appearance:none;}
@@ -566,6 +568,49 @@ const setsData={};
 const moveChecks={};
 
 function saveLog(){localStorage.setItem("wt_log",JSON.stringify(log));}
+
+/* ── Progressive overload ── */
+const EXERCISE_TYPE={
+  "Seated dumbbell chest press":"upper","Resistance band rows":"upper","Seated Arnold press":"upper",
+  "Resistance band pulldown":"upper","Dead bug":"core",
+  "Goblet squats":"lower","Single-leg RDL (bodyweight)":"lower","Reverse lunges":"lower",
+  "Wall sit":"lower","Glute bridges":"lower",
+  "Dumbbell deadlift":"lower","Seated dumbbell press + squat":"lower","Dumbbell Romanian deadlift":"lower",
+  "Dumbbell row on bench":"upper","Shadow boxing":"upper"
+};
+function exType(ex,dayIdx){
+  if(EXERCISE_TYPE[ex.name])return EXERCISE_TYPE[ex.name];
+  if(dayIdx===0)return "upper";
+  if(dayIdx===1)return "lower";
+  return "upper";
+}
+function roundTo(n,step){return Math.round(n/step)*step;}
+function computeOverload(day,dayIdx,ex){
+  const target=parseInt(ex.reps,10);
+  if(!Number.isFinite(target))return null;
+  const lk=day.name+"__"+ex.name;
+  const hist=log[lk]||[];
+  if(!hist.length)return null;
+  const last=hist[hist.length-1],prev=hist[hist.length-2];
+  const hitAll=s=>s.sets.length>0&&s.sets.every(x=>(parseInt(x.r)||0)>=target);
+  const missed=s=>!hitAll(s);
+  const type=exType(ex,dayIdx);
+  const incr=type==="lower"?5:2.5;
+  const lastW=Math.max(0,...last.sets.map(s=>parseFloat(s.w)||0));
+  const lastRepsStr=last.sets.map(s=>s.r).join(",");
+  let weight,tip;
+  if(prev&&missed(last)&&missed(prev)){
+    weight=roundTo(lastW*0.9,2.5);
+    tip=`Deload — missed reps 2 sessions (was ${lastW}\u00d7${lastRepsStr}, now ${weight})`;
+  } else if(hitAll(last)){
+    weight=roundTo(lastW+incr,0.5);
+    tip=`Last: ${lastW}\u00d7${lastRepsStr} — bumped to ${weight}`;
+  } else {
+    weight=lastW;
+    tip=`Last: ${lastW}\u00d7${lastRepsStr} — hold weight, hit ${target} reps`;
+  }
+  return {weight,reps:target,tip};
+}
 function saveSauna(){localStorage.setItem("wt_sauna",JSON.stringify(saunaLog));}
 function saveWalk(){localStorage.setItem("wt_walk",JSON.stringify(walkLog));}
 function saveMob(){localStorage.setItem("wt_mob",JSON.stringify(mobLog));}
@@ -817,7 +862,10 @@ function buildExList(){
   const list=document.getElementById("ex-list");list.innerHTML="";
   day.exercises.forEach((ex,ei)=>{
     const key=activeDay+"-"+ei;
-    if(!setsData[key])setsData[key]=Array.from({length:ex.sets},()=>({w:"",r:""}));
+    const overload=computeOverload(day,activeDay,ex);
+    if(!setsData[key]){
+      setsData[key]=Array.from({length:ex.sets},()=>overload?{w:String(overload.weight),r:String(overload.reps)}:{w:"",r:""});
+    }
     const lk=day.name+"__"+ex.name;
     const hist=log[lk]||[];const last=hist[hist.length-1];
     let badge="";
@@ -836,7 +884,8 @@ function buildExList(){
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           ${ex.guide}
         </div>
-        <div class="col-labels"><div class="col-lbl">set</div><div class="col-lbl">kg</div><div class="col-lbl">reps</div><div></div></div>
+        <div class="col-labels"><div class="col-lbl">set</div><div class="col-lbl">kg</div><div class="col-lbl">reps</div><div class="col-lbl">${overload?`<span class="ol-info" onclick="toggleOverloadTip(${activeDay},${ei})">&#9432;</span>`:""}</div></div>
+        ${overload?`<div class="ol-tip" id="oltip-${activeDay}-${ei}" style="display:none">${overload.tip}</div>`:""}
         <div id="sets-${activeDay}-${ei}"></div>
         <button class="add-set-btn" onclick="addSet(${activeDay},${ei})">+ add set</button>
         <div class="toast-wrap">
@@ -850,6 +899,7 @@ function buildExList(){
 }
 
 function toggleEx(h){const b=h.nextElementSibling;b.style.display=b.style.display==="none"?"":"none";}
+function toggleOverloadTip(di,ei){event&&event.stopPropagation();const t=document.getElementById("oltip-"+di+"-"+ei);if(t)t.style.display=t.style.display==="none"?"block":"none";}
 function renderSets(di,ei){
   const key=di+"-"+ei;const c=document.getElementById("sets-"+di+"-"+ei);if(!c)return;
   c.innerHTML=setsData[key].map((s,si)=>`
