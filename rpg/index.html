@@ -4,22 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="StatSheet">
 <meta name="theme-color" content="#08080f">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <title>StatSheet RPG</title>
-<script>
-// Register service worker for PWA install + offline cache
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW reg failed:', err));
-  });
-}
-</script>
 <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;800&family=Roboto+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════
@@ -951,6 +937,9 @@ label.field-lbl{display:block;font-family:var(--font-m);font-size:9px;color:var(
         <option value="runner">Runner build</option>
         <option value="powerlifter">Powerlifter</option>
         <option value="anime">Anime physique</option>
+        <option value="anime_warrior">Anime warrior</option>
+        <option value="military_tactical">Military / Tactical</option>
+        <option value="martial_arts">Martial arts / Combat</option>
         <option value="custom">Custom</option>
       </select>
     </div>
@@ -1024,6 +1013,9 @@ var BODY_TYPES = {
   runner:{ name:"Runner build", desc:"Lean, efficient, endurance-focused. Lower body muscle, minimal upper bulk. Long distance ready.", targets:{waist:30,hips:37,chest:38,shoulders:20,bicep:12,thigh:21}, color:"#4a9eff" },
   powerlifter:{ name:"Powerlifter", desc:"Maximum strength. Bigger frame, significant muscle mass. Raw power over aesthetics.", targets:{waist:38,hips:46,chest:52,shoulders:26,bicep:18,thigh:28}, color:"#ff4a6a" },
   anime:{ name:"Anime physique", desc:"Lean with visible definition — wide shoulders, abs, athletic arms. The shonen protagonist look.", targets:{waist:32,hips:38,chest:44,shoulders:23,bicep:15,thigh:23}, color:"#a855f7" },
+  anime_warrior:{ name:"Anime warrior", desc:"Hybrid: V-taper aesthetic + combat readiness. Anime physique + tactical capability.", targets:{waist:33,hips:38,chest:44,shoulders:24,bicep:15,thigh:23}, color:"#e0115f" },
+  military_tactical:{ name:"Military / Tactical", desc:"ACFT-aligned combat readiness. Strength, endurance, rucking, capability over aesthetics.", targets:{waist:34,hips:40,chest:44,shoulders:24,bicep:15,thigh:24}, color:"#5b6b3a" },
+  martial_arts:{ name:"Martial arts / Combat", desc:"Combat sports prep — BJJ, MMA, boxing, Muay Thai. Explosiveness, conditioning, grappling base.", targets:{waist:33,hips:39,chest:43,shoulders:23,bicep:15,thigh:24}, color:"#b91c1c" },
   custom:{ name:"Custom goal", desc:"Set your own target measurements.", targets:{waist:35,hips:42,chest:45,shoulders:23,bicep:15,thigh:25}, color:"#2dd4bf" },
 };
 
@@ -1272,6 +1264,106 @@ var WORKOUTS = {
       {name:"Dumbbell bicep curls",      sets:"4×12",guide:"Slow eccentric",                         why:"Defined arms complete the look"},
       {name:"Tricep dips or extension",  sets:"4×12",guide:"Full lockout",                           why:"Tricep is bigger than bicep"},
       {name:"Shadow boxing",             sets:"5×30s",guide:"Full power",                            why:"Cardio, coordination, looks amazing"},
+    ],
+  },
+  anime_warrior:{
+    1:[
+      {name:"Seated Arnold press",       sets:"4×10",guide:"Explosive concentric, controlled down",   why:"Shoulder width = V-taper money"},
+      {name:"Dumbbell lateral raises",   sets:"5×15",guide:"Light, perfect form, no swing",           why:"Direct width builder for the silhouette"},
+      {name:"Dumbbell chest press",      sets:"4×8", guide:"Heavier range for hypertrophy",           why:"Chest mass under the shirt"},
+      {name:"Dumbbell rows",             sets:"4×10",guide:"Heavy, full squeeze",                     why:"Back thickness balances width"},
+      {name:"Resistance band pulldown",  sets:"4×10",guide:"Full stretch, lat focus",                 why:"Lats build the V"},
+      {name:"Scap pulls or dead hang",   sets:"3×30s",guide:"Pull-up progression — pick your stage",  why:"Building toward 10+ pull-ups"},
+      {name:"Dumbbell bicep curls",      sets:"3×12",guide:"Slow eccentric",                          why:"Arm definition"},
+    ],
+    2:[
+      {name:"Goblet squats",             sets:"4×10",guide:"Deep, chest up, control",                 why:"Quad and glute hypertrophy"},
+      {name:"Romanian deadlift",         sets:"4×10",guide:"Hinge at hip, hamstring stretch",         why:"Posterior chain + hamstring shape"},
+      {name:"Reverse lunges",            sets:"3×12",guide:"Long stride, drive through heel",         why:"Glute and quad development"},
+      {name:"Farmer carry",              sets:"3×40s",guide:"Heaviest weight you can hold, walk",     why:"Grip + traps + full-body tension"},
+      {name:"Suitcase carry",            sets:"3×30s each",guide:"One side only, brace hard",         why:"Anti-lateral core = combat strength"},
+      {name:"Standing calf raises",      sets:"4×20",guide:"Slow, full range",                        why:"Visible calves complete the look"},
+    ],
+    3:[
+      {name:"Combat circuit rounds",     sets:"5×3min",guide:"3 min work / 1 min rest. Cycle: shadowbox, sprawls, burpees, jump rope. Keep moving.", why:"Combat conditioning + HR recovery training"},
+      {name:"Sprint intervals",          sets:"6×30s",guide:"Full effort, 60s rest between",          why:"Anaerobic capacity for fight pace"},
+      {name:"Plank",                     sets:"3×60s",guide:"Rigid, building toward 2 min hold",      why:"Plank benchmark + core foundation"},
+    ],
+    4:[
+      {name:"Dumbbell deadlift",         sets:"4×6", guide:"Heavy, push your limit",                  why:"Total body strength foundation"},
+      {name:"Weighted pushups or dips",  sets:"4×8", guide:"Add weight or elevate feet",              why:"Pressing strength + pushup benchmark"},
+      {name:"Dumbbell row",              sets:"4×8", guide:"Heavy, full pull",                        why:"Back thickness"},
+      {name:"Goblet squat",              sets:"3×10",guide:"Moderate weight after deadlifts",         why:"Lower volume for full-body day"},
+      {name:"Pull-up or band pulldown",  sets:"3×max",guide:"Max effort, log the count",              why:"Pull-up benchmark tracking"},
+      {name:"TEST FINISHER (alternating)",sets:"~15 min",guide:"Week A: max pushups 2min + plank to failure + 2-mi run. Week B: 5×3min sparring rounds, 1min rest. Track which week each Thursday.", why:"Capability benchmarks under fatigue"},
+    ],
+    0:[
+      {name:"Weighted ruck",             sets:"30-60 min",guide:"25-45 lb pack. Log distance, time, weight.",why:"Building toward 12 mi @ 45 lb benchmark"},
+      {name:"Cooldown stretch",          sets:"10 min",guide:"Hip flexors hard, hamstrings, calves",  why:"Rucking trashes hip flexors"},
+    ],
+  },
+  military_tactical:{
+    1:[
+      {name:"Trap bar or DB deadlift",   sets:"5×5", guide:"Heavy. ACFT 3-rep max foundation.",      why:"Deadlift = primary ACFT strength event"},
+      {name:"Weighted carry",            sets:"4×40s",guide:"Farmer or sandbag, heavy",              why:"Full-body tension, grip, traps"},
+      {name:"Hand-release pushups",      sets:"4×max",guide:"Chest to floor, hands off, full reset", why:"ACFT pushup standard — toward 50/2min"},
+      {name:"Plank",                     sets:"4×60s",guide:"Rigid line, no sag — toward 2 min hold",why:"Plank benchmark + core stability"},
+      {name:"Pull-up or inverted row",   sets:"3×8", guide:"Pick your stage, full range",            why:"Pulling strength for carries and combat"},
+    ],
+    2:[
+      {name:"2-mile run",                sets:"1×timed",guide:"Run for time, log result",             why:"ACFT 2-mile benchmark — toward sub-16"},
+      {name:"Sprint intervals",          sets:"8×100m",guide:"Full effort, walk-back rest",          why:"Anaerobic capacity"},
+      {name:"Sprint-drag-carry sim",     sets:"3 rounds",guide:"Sprint 25m, drag heavy bag 25m, suitcase carry 25m back",why:"ACFT sprint-drag-carry event"},
+    ],
+    3:[
+      {name:"Weighted ruck",             sets:"30-60 min",guide:"20-35 lb pack. Log distance, time.",why:"Building toward 12 mi @ 45 lb"},
+      {name:"Cooldown stretch",          sets:"10 min",guide:"Hip flexors, hamstrings, calves",      why:"Rucking trashes hip flexors"},
+    ],
+    4:[
+      {name:"Dumbbell deadlift",         sets:"5×5", guide:"Heavy, hip hinge",                       why:"Second strength session of the week"},
+      {name:"Suitcase carry",            sets:"4×30s each",guide:"One side, brace hard, walk",       why:"Anti-lateral core for combat"},
+      {name:"Hand-release pushups",      sets:"4×max",guide:"Log the count toward 50/2min",          why:"Pushup volume + benchmark tracking"},
+      {name:"Plank with shoulder taps",  sets:"3×60s",guide:"Hips still, alternate taps",            why:"Anti-rotation core"},
+      {name:"Pull-ups",                  sets:"4×8", guide:"Assisted if needed, log max set",        why:"Pull-up benchmark — toward 10+"},
+    ],
+    0:[
+      {name:"Active recovery walk",      sets:"30 min",guide:"Easy pace, no pack",                   why:"Sunday rest day — light movement only"},
+      {name:"Mobility flow",             sets:"15 min",guide:"Hip flexors, shoulders, spine, ankles",why:"Recovery and flexibility maintenance"},
+    ],
+  },
+  martial_arts:{
+    1:[
+      {name:"Kettlebell swings",         sets:"5×15",guide:"Hip drive, explosive",                   why:"Hip power = punch and shot power"},
+      {name:"Box jumps",                 sets:"4×8", guide:"Soft landing, reset each rep",           why:"Lower body explosiveness"},
+      {name:"Pull-ups",                  sets:"4×max",guide:"Assisted if needed, full range",        why:"Pulling strength for grappling"},
+      {name:"Farmer carry",              sets:"3×40s",guide:"Heavy, walk straight",                  why:"Grip endurance for clinch and gi work"},
+      {name:"Grip finisher",             sets:"3×30s",guide:"Towel hang, plate pinch, or dead hang", why:"Grip strength = combat fundamental"},
+    ],
+    2:[
+      {name:"Combat conditioning rounds",sets:"5×3min",guide:"3 min work / 1 min rest. Cycle: shadowbox, sprawls, burpees, jump rope.",why:"Round-ready conditioning"},
+      {name:"Plank",                     sets:"3×60s",guide:"Rigid, no sag",                         why:"Core foundation for striking and grappling"},
+      {name:"Core circuit",              sets:"3 rounds",guide:"15 bicycles, 12 leg raises, 10 dead bug each side",why:"Rotational + anti-extension core"},
+    ],
+    3:[
+      {name:"Hip escapes (shrimps)",     sets:"4×10 each",guide:"Floor work — escape from bottom",   why:"BJJ guard retention foundation"},
+      {name:"Sprawl drills",             sets:"5×10",guide:"Stance → sprawl → recover, fast",        why:"Takedown defense reflex"},
+      {name:"Bridge and roll",           sets:"4×8 each",guide:"Hip thrust, turn over shoulder",     why:"Bottom escape + neck strength"},
+      {name:"Penetration step / shot",   sets:"4×10",guide:"Drop level, shoot, recover stance",      why:"Takedown entry mechanics"},
+      {name:"Russian twist or wood chop",sets:"4×15",guide:"Loaded rotation, controlled",            why:"Rotational power for punches and throws"},
+    ],
+    4:[
+      {name:"Trap bar or DB deadlift",   sets:"5×5", guide:"Heavy, hip hinge",                       why:"Posterior chain + raw strength"},
+      {name:"Plyo pushups",              sets:"4×6", guide:"Explosive off the floor, soft return",   why:"Pressing explosiveness for strikes"},
+      {name:"Pull-ups or chin-ups",      sets:"4×6", guide:"Add weight if possible",                 why:"Pulling power for grappling control"},
+      {name:"Suitcase carry",            sets:"3×30s each",guide:"Heavy, brace one side",            why:"Anti-lateral core"},
+      {name:"Grip / forearm finisher",   sets:"3×max",guide:"Dead hang, towel hang, or plate pinch", why:"Sustained grip for clinch and submissions"},
+    ],
+    0:[
+      {name:"Hip flexor stretch",        sets:"60s each",guide:"Couch stretch or kneeling lunge",    why:"Hips take everything in combat training"},
+      {name:"Pigeon pose",               sets:"60s each",guide:"Sink in, breathe",                   why:"External hip rotation"},
+      {name:"Shoulder rotation flow",    sets:"5 min",guide:"Arm circles, scapular rotations, pass-throughs",why:"Shoulder health for striking and grappling"},
+      {name:"Spine mobility",            sets:"5 min",guide:"Cat-cow, thread the needle, spinal twist",why:"Rotational mobility = rotational power"},
+      {name:"Active recovery walk",      sets:"20 min",guide:"Easy pace",                            why:"Blood flow without taxing recovery"},
     ],
   },
   athletic:{
