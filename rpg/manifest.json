@@ -1,6 +1,6 @@
 {
-  "name": "StatSheet RPG",
-  "short_name": "StatSheet",
+  "name": "RPME",
+  "short_name": "RPME",
   "description": "Gamified fitness tracker — RPG mechanics, gacha rewards, body progress",
   "start_url": "./index.html",
   "scope": "./",

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#08080f">
-<title>StatSheet RPG</title>
+<title>RPME</title>
 <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;800&family=Roboto+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════
@@ -578,23 +578,60 @@ label.field-lbl{display:block;font-family:var(--font-m);font-size:9px;color:var(
   <!-- Silhouette -->
   <div class="sil-section">
     <div class="sil-wrap">
-      <svg id="body-svg" viewBox="0 0 260 315" width="220" height="266" xmlns="http://www.w3.org/2000/svg">
-        <g id="current-body">
-          <ellipse id="c-head" cx="130" cy="34" rx="22" ry="25" fill="#1a1a3a" stroke="#4a9eff" stroke-width="1.5"/>
-          <rect id="c-neck" x="121" y="57" width="18" height="14" rx="4" fill="#1a1a3a" stroke="#4a9eff" stroke-width="1.5"/>
-          <path id="c-torso" fill="#1a1a3a" stroke="#4a9eff" stroke-width="1.5" stroke-linejoin="round"/>
-          <path id="c-larm" fill="#1a1a3a" stroke="#4a9eff" stroke-width="1.5" stroke-linejoin="round"/>
-          <path id="c-rarm" fill="#1a1a3a" stroke="#4a9eff" stroke-width="1.5" stroke-linejoin="round"/>
-          <path id="c-lleg" fill="#1a1a3a" stroke="#4a9eff" stroke-width="1.5" stroke-linejoin="round"/>
-          <path id="c-rleg" fill="#1a1a3a" stroke="#4a9eff" stroke-width="1.5" stroke-linejoin="round"/>
+      <svg id="body-svg" viewBox="0 0 260 345" width="220" height="292" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="body-outline" x="-5%" y="-5%" width="110%" height="110%">
+            <feMorphology in="SourceAlpha" operator="dilate" radius="1.4" result="d"/>
+            <feComposite in="d" in2="SourceAlpha" operator="out" result="o"/>
+            <feFlood flood-color="#4a9eff"/>
+            <feComposite in2="o" operator="in" result="oc"/>
+            <feMerge>
+              <feMergeNode in="SourceGraphic"/>
+              <feMergeNode in="oc"/>
+            </feMerge>
+          </filter>
+          <filter id="goal-outline" x="-5%" y="-5%" width="110%" height="110%">
+            <feMorphology in="SourceAlpha" operator="dilate" radius="2.0" result="d"/>
+            <feComposite in="d" in2="SourceAlpha" operator="out" result="o"/>
+            <feFlood flood-color="#fbbf24"/>
+            <feComposite in2="o" operator="in" result="oc"/>
+            <feMerge>
+              <feMergeNode in="SourceGraphic"/>
+              <feMergeNode in="oc"/>
+            </feMerge>
+          </filter>
+          <filter id="lean-outline" x="-5%" y="-5%" width="110%" height="110%">
+            <feMorphology in="SourceAlpha" operator="dilate" radius="1.0" result="d"/>
+            <feComposite in="d" in2="SourceAlpha" operator="out" result="o"/>
+            <feFlood flood-color="#ffffff" flood-opacity="0.85"/>
+            <feComposite in2="o" operator="in"/>
+          </filter>
+        </defs>
+        <g id="current-body" filter="url(#body-outline)">
+          <path id="c-head" d="M 130 4 C 149 4 149 18 149 28 C 149 33 144 39 138 43 C 135 46 132 48 130 48 C 128 48 125 46 122 43 C 116 39 111 33 111 28 C 111 18 111 4 130 4 Z" fill="#1a1a3a"/>
+          <path id="c-torso" fill="#1a1a3a"/>
+          <rect id="c-neck" x="123" y="46" width="14" height="14" rx="3" fill="#1a1a3a"/>
+          <path id="c-larm" fill="#1a1a3a"/>
+          <path id="c-rarm" fill="#1a1a3a"/>
+          <path id="c-lleg" fill="#1a1a3a"/>
+          <path id="c-rleg" fill="#1a1a3a"/>
         </g>
-        <g id="ideal-body" style="display:none">
-          <ellipse cx="130" cy="34" rx="22" ry="25" fill="none" stroke="#c9a84c" stroke-width="1.2" stroke-dasharray="5,3"/>
-          <path id="i-torso" fill="none" stroke="#c9a84c" stroke-width="1.2" stroke-dasharray="5,3"/>
-          <path id="i-larm" fill="none" stroke="#c9a84c" stroke-width="1.2" stroke-dasharray="5,3"/>
-          <path id="i-rarm" fill="none" stroke="#c9a84c" stroke-width="1.2" stroke-dasharray="5,3"/>
-          <path id="i-lleg" fill="none" stroke="#c9a84c" stroke-width="1.2" stroke-dasharray="5,3"/>
-          <path id="i-rleg" fill="none" stroke="#c9a84c" stroke-width="1.2" stroke-dasharray="5,3"/>
+        <g id="ideal-body" filter="url(#goal-outline)" style="display:none">
+          <path d="M 130 4 C 149 4 149 18 149 28 C 149 33 144 39 138 43 C 135 46 132 48 130 48 C 128 48 125 46 122 43 C 116 39 111 33 111 28 C 111 18 111 4 130 4 Z" fill="rgba(201,168,76,0.20)"/>
+          <path id="i-torso" fill="rgba(201,168,76,0.20)"/>
+          <rect x="123" y="46" width="14" height="14" rx="3" fill="rgba(201,168,76,0.20)"/>
+          <path id="i-larm" fill="rgba(201,168,76,0.20)"/>
+          <path id="i-rarm" fill="rgba(201,168,76,0.20)"/>
+          <path id="i-lleg" fill="rgba(201,168,76,0.20)"/>
+          <path id="i-rleg" fill="rgba(201,168,76,0.20)"/>
+        </g>
+        <g id="lean-body" filter="url(#lean-outline)" style="display:none">
+          <path id="l-head" fill="#1a1a3a"/>
+          <path id="l-torso" fill="#1a1a3a"/>
+          <path id="l-larm" fill="#1a1a3a"/>
+          <path id="l-rarm" fill="#1a1a3a"/>
+          <path id="l-lleg" fill="#1a1a3a"/>
+          <path id="l-rleg" fill="#1a1a3a"/>
         </g>
         <g id="meas-labels"></g>
       </svg>
@@ -603,7 +640,17 @@ label.field-lbl{display:block;font-family:var(--font-m);font-size:9px;color:var(
       <div class="sil-leg"><div class="sil-dot" style="background:#4a9eff"></div>Current</div>
       <div class="sil-leg"><div class="sil-dot" style="border:1.5px dashed #c9a84c;background:transparent"></div>Goal</div>
     </div>
-    <button class="goal-toggle" id="goal-toggle-btn" onclick="toggleGoalOverlay()">Show goal overlay</button>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;align-items:center">
+      <select id="lean-bf-select" onchange="updateLeanTarget()" style="background:#1a1a3a;color:#dddddd;border:1px solid #444;border-radius:6px;padding:6px 10px;font-family:var(--font-m);font-size:11px">
+        <option value="20">20% BF</option>
+        <option value="15" selected>15% BF</option>
+        <option value="12">12% BF</option>
+        <option value="10">10% BF</option>
+        <option value="8">8% BF</option>
+      </select>
+      <button class="goal-toggle" id="lean-toggle-btn" onclick="toggleLeanOverlay()">Show lean target</button>
+      <button class="goal-toggle" id="goal-toggle-btn" onclick="toggleGoalOverlay()">Show goal overlay</button>
+    </div>
   </div>
 
   <!-- Body stats -->
@@ -652,6 +699,17 @@ label.field-lbl{display:block;font-family:var(--font-m);font-size:9px;color:var(
     <div id="prog-body" style="padding:0 16px 12px" id="prog-bars"></div>
   </div>
   <div class="divider"></div>
+
+  <!-- Combat capability records (only shown for combat goals) -->
+  <div id="capability-section" style="display:none">
+    <div class="sec-hdr" style="cursor:pointer" onclick="toggleSection('cap-body','cap-chev')">
+      <svg class="sec-icon" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      <div class="sec-title">Capability records</div><div class="sec-line"></div>
+      <svg id="cap-chev" class="sec-chev open" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div id="cap-body" style="padding:0 16px 12px"></div>
+  </div>
+  <div id="capability-divider" class="divider" style="display:none"></div>
 
   <!-- Ratios -->
   <div>
@@ -2009,6 +2067,142 @@ function load(){
 }
 function save(){ localStorage.setItem('rpg_v2', JSON.stringify(data)); }
 
+// ── Capability records (combat fitness benchmarks) ─────────────────────────
+var CAPABILITY_DEFS = [
+  {id:'height',   name:'Height',            unit:'in',    target:null, icon:'📏', desc:'Reference', readOnly:true,  syncStat:'height'},
+  {id:'weight',   name:'Weight',            unit:'lbs',   target:175,  icon:'⚖️', desc:'Goal: 165-178 lb range', lowerBetter:true, syncStat:'weight'},
+  {id:'pullups',  name:'Pull-ups',          unit:'reps',  target:10,   icon:'💪', desc:'Max dead-hang reps'},
+  {id:'pushups',  name:'Push-ups (2 min)',  unit:'reps',  target:50,   icon:'🤸', desc:'Hand-release, 2 min cap'},
+  {id:'plank',    name:'Plank hold',        unit:'sec',   target:120,  icon:'🧘', desc:'Rigid hold to failure'},
+  {id:'run2mi',   name:'2-mile run',        unit:'sec',   target:960,  icon:'🏃', desc:'Goal: sub-16:00 (lower is better)', lowerBetter:true},
+  {id:'ruck',     name:'Ruck (mi @ lb)',    unit:'mi-lb', target:{distance:12,weight:45}, icon:'🎒', desc:'Distance × pack weight'}
+];
+function getCapRecords(){ return ls('rpg_capability_records', {}); }
+function logCapRecord(id, value){
+  var recs = getCapRecords();
+  if(!recs[id]) recs[id] = {history:[], best:null};
+  var entry = {date:new Date().toISOString().slice(0,10), value:value};
+  recs[id].history.push(entry);
+  // Update best
+  var best = recs[id].best;
+  var def = CAPABILITY_DEFS.find(function(d){return d.id===id;});
+  if(id==='ruck'){
+    var score = value.distance * value.weight;
+    var bestScore = best ? (best.distance * best.weight) : 0;
+    if(score > bestScore) recs[id].best = value;
+  } else if(def && def.lowerBetter){
+    if(best===null || value < best) recs[id].best = value;
+  } else {
+    if(best===null || value > best) recs[id].best = value;
+  }
+  lsSet('rpg_capability_records', recs);
+}
+function fmtCapValue(id, v){
+  if(v==null) return '—';
+  if(id==='plank' || id==='run2mi'){
+    var m = Math.floor(v/60), s = v%60;
+    return m+':'+(s<10?'0':'')+s;
+  }
+  if(id==='ruck') return v.distance+'mi @ '+v.weight+'lb';
+  return v;
+}
+function isCombatGoal(){
+  return ['anime_warrior','military_tactical','martial_arts'].indexOf(data.bodyType)>=0;
+}
+function renderCapabilityCard(){
+  var sec = document.getElementById('capability-section');
+  var div = document.getElementById('capability-divider');
+  var body = document.getElementById('cap-body');
+  if(!sec || !body) return;
+  if(!isCombatGoal()){
+    sec.style.display = 'none';
+    if(div) div.style.display = 'none';
+    return;
+  }
+  sec.style.display = '';
+  if(div) div.style.display = '';
+  var recs = getCapRecords();
+  var html = '';
+  CAPABILITY_DEFS.forEach(function(c){
+    var r = recs[c.id] || {history:[], best:null};
+    var best = r.best;
+    // Pull from stats fields (weight/height) so they sync with measurements form
+    if(c.syncStat && data.stats && data.stats[c.syncStat]){
+      var statVal = data.stats[c.syncStat];
+      // For weight (lower-better): use stats value directly as current
+      // For height: read-only, use stats value
+      best = statVal;
+    }
+    var pctDisp = 0;
+    if(!c.readOnly && c.target!=null){
+      if(c.id==='ruck'){
+        var score = best ? best.distance*best.weight : 0;
+        var tgt = c.target.distance * c.target.weight;
+        pctDisp = Math.min(100, Math.round(score/tgt*100));
+      } else if(c.lowerBetter){
+        pctDisp = best===null ? 0 : Math.max(0, Math.min(100, Math.round((1 - (best - c.target)/c.target) * 100)));
+        if(best!==null && best <= c.target) pctDisp = 100;
+      } else {
+        pctDisp = best===null ? 0 : Math.min(100, Math.round(best/c.target*100));
+      }
+    }
+    var spark = (r.history||[]).slice(-8).map(function(h){
+      var v = (typeof h.value==='object') ? h.value.distance*h.value.weight : h.value;
+      return v;
+    });
+    var max = Math.max.apply(null, spark.concat([1]));
+    var sparkHtml = spark.length>1 ? spark.map(function(v,i){
+      var h = Math.max(2, Math.round(v/max*16));
+      return '<div style="width:4px;height:'+h+'px;background:var(--gold);opacity:'+(0.3+0.1*i)+';border-radius:1px"></div>';
+    }).join('') : '';
+    var displayBest = (c.id==='height' && best) ? (Math.floor(best/12)+"'"+Math.round(best%12)+'"') : fmtCapValue(c.id, best);
+    var displayTarget = c.target==null ? '' : (c.id==='height' ? '' : 'target '+fmtCapValue(c.id,c.target));
+    var logBtn = c.readOnly ? '<span style="font-family:var(--font-m);font-size:8px;color:var(--text4);padding:3px 6px">from measurements</span>'
+      : '<button onclick="openCapLog(\''+c.id+'\')" style="background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:var(--font-m);font-size:9px;padding:3px 8px;border-radius:4px;cursor:pointer">+ LOG</button>';
+    html += '<div style="background:#0f0f1f;border:1px solid #2a2a4a;border-radius:8px;padding:10px 12px;margin-bottom:8px">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">'
+      +   '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">'+c.icon+'</span><span style="font-family:var(--font-d);font-size:11px;color:var(--text2);font-weight:600">'+c.name+'</span></div>'
+      +   logBtn
+      + '</div>'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
+      +   '<div><div style="font-family:var(--font-m);font-size:14px;color:#fff;font-weight:600">'+displayBest+'</div>'
+      +   (displayTarget ? '<div style="font-family:var(--font-m);font-size:8px;color:var(--text4)">'+displayTarget+'</div>' : '')+'</div>'
+      +   '<div style="display:flex;align-items:flex-end;gap:1px;height:18px">'+sparkHtml+'</div>'
+      +   (c.target!=null ? '<div style="font-family:var(--font-m);font-size:11px;color:'+(pctDisp>=100?'#22c55e':'var(--text2)')+';min-width:36px;text-align:right">'+pctDisp+'%</div>' : '')
+      + '</div>'
+      + (c.target!=null ? '<div style="height:3px;background:#1f1f3a;border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:'+pctDisp+'%;background:'+(pctDisp>=100?'#22c55e':'var(--gold)')+';border-radius:2px"></div></div>' : '')
+      + '</div>';
+  });
+  body.innerHTML = html;
+}
+function openCapLog(id){
+  var def = CAPABILITY_DEFS.find(function(d){return d.id===id;});
+  if(!def) return;
+  var prompt1, val;
+  if(id==='ruck'){
+    var dist = window.prompt('Ruck distance (miles)?');
+    if(dist===null || dist==='') return;
+    var weight = window.prompt('Pack weight (lbs)?');
+    if(weight===null || weight==='') return;
+    val = {distance:parseFloat(dist), weight:parseFloat(weight)};
+  } else if(id==='plank' || id==='run2mi'){
+    var raw = window.prompt(def.name+' time? (M:SS or seconds)');
+    if(raw===null || raw==='') return;
+    if(raw.indexOf(':')>=0){
+      var parts = raw.split(':');
+      val = parseInt(parts[0],10)*60 + parseInt(parts[1],10);
+    } else val = parseInt(raw,10);
+  } else {
+    var raw2 = window.prompt(def.name+' ('+def.unit+')?');
+    if(raw2===null || raw2==='') return;
+    val = parseInt(raw2,10);
+  }
+  if(isNaN(val) && typeof val!=='object') return;
+  logCapRecord(id, val);
+  renderCapabilityCard();
+  if(typeof haptic==='function') haptic();
+}
+
 // Helper storage getters/setters
 function ls(k, def){ try{ var v=localStorage.getItem(k); return v!==null?JSON.parse(v):def; }catch(e){ return def; } }
 function lsSet(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
@@ -2136,6 +2330,20 @@ function toggleGoalOverlay(){
   if(el) el.style.display = goalOverlayOn ? 'block' : 'none';
   if(btn){ btn.textContent = goalOverlayOn?'Hide goal overlay':'Show goal overlay'; btn.classList.toggle('on', goalOverlayOn); }
 }
+var leanOverlayOn = false;
+function toggleLeanOverlay(){
+  leanOverlayOn = !leanOverlayOn;
+  var el = document.getElementById('lean-body');
+  var btn = document.getElementById('lean-toggle-btn');
+  if(el) el.style.display = leanOverlayOn ? 'block' : 'none';
+  if(btn){ btn.textContent = leanOverlayOn?'Hide lean target':'Show lean target'; btn.classList.toggle('on', leanOverlayOn); }
+  // Fill the fat layer area: change current body fill to translucent orange when lean visible
+  var fatColor = leanOverlayOn ? 'rgba(255,140,80,0.30)' : '#1a1a3a';
+  ['c-head','c-torso','c-neck','c-larm','c-rarm','c-lleg','c-rleg'].forEach(function(id){
+    var p=document.getElementById(id); if(p) p.setAttribute('fill', fatColor);
+  });
+}
+function updateLeanTarget(){ if(typeof buildSilhouette==='function') buildSilhouette(); }
 
 function buildSilhouette(){
   var st = data.stats;
@@ -2155,59 +2363,164 @@ function buildSilhouette(){
     var nk=9, armLen=54;
 
     // Y positions — tighter, more human proportions
-    var yNk=58, ySh=68, yCh=100, yWa=126, yHi=145;
+    var yNk=58, ySh=68, yCh=84, yWa=124, yHi=145;
     var yCr=160, yKn=222, yAnk=296;
     var armY=ySh+8;
 
     // Torso — smoother curves, more natural taper
     var torso='M '+(cx-nk)+' '+yNk
-      +' C '+(cx-shW*.6)+' '+(ySh-4)+' '+(cx-shW)+' '+(ySh+4)+' '+(cx-chW)+' '+yCh
-      +' C '+(cx-chW)+' '+(yCh+8)+' '+(cx-waW-2)+' '+(yWa-8)+' '+(cx-waW)+' '+yWa
-      +' C '+(cx-waW)+' '+(yWa+8)+' '+(cx-hiW+2)+' '+(yHi-4)+' '+(cx-hiW)+' '+yHi
+      // SHOULDER shelf (horizontal, GREEN)
+      +' L '+(cx-shW)+' '+(yNk+2)
+      // PINK slope from shoulder down to chest
+      +' L '+(cx-chW)+' '+yCh
+      // Quick narrow from chest to waist width (transition to cylinder)
+      +' Q '+(cx-chW-1)+' '+(yCh+8)+' '+(cx-waW)+' '+(yCh+16)
+      // YELLOW cylinder — vertical waist section
+      +' L '+(cx-waW)+' '+(yHi-6)
+      // Smooth curve out to hip width
+      +' Q '+(cx-waW-1)+' '+(yHi-2)+' '+(cx-hiW)+' '+yHi
+      // Vertical down to crotch
       +' L '+(cx-hiW)+' '+yCr
+      // Crotch curve
       +' Q '+(cx-5)+' '+(yCr+8)+' '+cx+' '+(yCr+8)
       +' Q '+(cx+5)+' '+(yCr+8)+' '+(cx+hiW)+' '+yCr
+      // RIGHT side (mirror)
       +' L '+(cx+hiW)+' '+yHi
-      +' C '+(cx+hiW-2)+' '+(yHi-4)+' '+(cx+waW)+' '+(yWa+8)+' '+(cx+waW)+' '+yWa
-      +' C '+(cx+waW+2)+' '+(yWa-8)+' '+(cx+chW)+' '+(yCh+8)+' '+(cx+chW)+' '+yCh
-      +' C '+(cx+shW)+' '+(ySh+4)+' '+(cx+shW*.6)+' '+(ySh-4)+' '+(cx+nk)+' '+yNk
+      +' Q '+(cx+waW+1)+' '+(yHi-2)+' '+(cx+waW)+' '+(yHi-6)
+      +' L '+(cx+waW)+' '+(yCh+16)
+      +' Q '+(cx+chW+1)+' '+(yCh+8)+' '+(cx+chW)+' '+yCh
+      +' L '+(cx+shW)+' '+(yNk+2)
+      +' L '+(cx+nk)+' '+yNk
       +' Z';
 
-    // Arms — tapered, slight angle downward (more natural than pure horizontal)
-    var lAX=cx-shW, rAX=cx+shW;
-    var armDropY=armY+14; // wrist drops slightly below shoulder
-    var larm='M '+lAX+' '+(armY-biW)
-      +' C '+(lAX-armLen*.35)+' '+(armY-biW)+' '+(lAX-armLen+6)+' '+(armDropY-biW*.55)+' '+(lAX-armLen)+' '+(armDropY-biW*.5)
-      +' L '+(lAX-armLen)+' '+(armDropY+biW*.5)
-      +' C '+(lAX-armLen+6)+' '+(armDropY+biW*.55)+' '+(lAX-armLen*.35)+' '+(armY+biW)+' '+lAX+' '+(armY+biW)
-      +' Z';
-    var rarm='M '+rAX+' '+(armY-biW)
-      +' C '+(rAX+armLen*.35)+' '+(armY-biW)+' '+(rAX+armLen-6)+' '+(armDropY-biW*.55)+' '+(rAX+armLen)+' '+(armDropY-biW*.5)
-      +' L '+(rAX+armLen)+' '+(armDropY+biW*.5)
-      +' C '+(rAX+armLen-6)+' '+(armDropY+biW*.55)+' '+(rAX+armLen*.35)+' '+(armY+biW)+' '+rAX+' '+(armY+biW)
+    // Arms — rounded deltoid cap, slight outward angle, wrist taper into hand block.
+    var lShX=cx-shW, rShX=cx+shW;
+    var yElbow=yWa+10;        // elbow slightly lower
+    var yWrist=yHi+22;         // wrist below hip line
+    var yHandTop=yWrist+2;
+    var yHandMid=yWrist+11;
+    var yHandBot=yWrist+22;    // taller hand for visible mass
+    var faW=Math.max(4, Math.round(biW*0.72));
+    var armGap=4;    // POSITIVE — inner top tucked INSIDE torso so shapes overlap (no armpit notch)
+
+    // Straight arm — constant width all the way down, no internal widening.
+    // Outward angle is applied via SVG transform="rotate(...)" after the path is set.
+    var biOut=biW*1.5;         // outer bicep
+    var biSpread=biW*1.5;      // straight — same width as bicep
+    var wOut=biW*1.5;          // wrist same width as bicep
+    var wIn=Math.max(1, biW*0.2);
+    var hOut=biW*2.4;          // (legacy, kept for right-arm code)
+    var hIn=Math.max(1, biW*0.05);  // (legacy)
+    var handHW=Math.max(8, biW*1.4);   // half-width of hand at widest (oval balloon)
+    var foIn=Math.max(1, biW*0.2);
+
+    // LEFT arm — attaches at top of shoulder shelf, drops vertically
+    var yArmTop=yNk+2;
+    var larm='M '+(lShX+armGap)+' '+yArmTop
+      +' C '+(lShX-biW*0.5)+' '+yArmTop+' '+(lShX-biW*1.0)+' '+(yArmTop+4)+' '+(lShX-biOut)+' '+(yArmTop+10)
+      +' C '+(lShX-biOut-1)+' '+(yElbow-12)+' '+(lShX-biSpread)+' '+(yElbow-4)+' '+(lShX-biSpread)+' '+yElbow
+      +' L '+(lShX-wOut)+' '+yWrist
+      // HAND — symmetric oval/balloon centered below wrist. Widest in MIDDLE, rounded bottom.
+      // wristCxL = midpoint X between outer wrist and inner wrist (hand center axis)
+      // handHW = half-width of hand at widest (much wider than wrist)
+      +' C '+(lShX-wOut-2)+' '+(yWrist+2)+' '+(lShX-(wOut+foIn)*0.5-handHW-1)+' '+(yHandTop+4)+' '+(lShX-(wOut+foIn)*0.5-handHW)+' '+yHandMid
+      // Outer palm widest curving DOWN/IN to bottom-center
+      +' C '+(lShX-(wOut+foIn)*0.5-handHW)+' '+(yHandBot-2)+' '+(lShX-(wOut+foIn)*0.5-handHW+4)+' '+(yHandBot+6)+' '+(lShX-(wOut+foIn)*0.5)+' '+(yHandBot+7)
+      // Bottom-center curving UP/IN to inner palm widest
+      +' C '+(lShX-(wOut+foIn)*0.5+handHW-4)+' '+(yHandBot+6)+' '+(lShX-(wOut+foIn)*0.5+handHW)+' '+(yHandBot-2)+' '+(lShX-(wOut+foIn)*0.5+handHW)+' '+yHandMid
+      // Inner palm widest back to wrist
+      +' C '+(lShX-(wOut+foIn)*0.5+handHW)+' '+(yHandTop+4)+' '+(lShX-foIn+2)+' '+(yWrist+2)+' '+(lShX-foIn)+' '+yWrist
+      +' L '+(lShX-foIn+1)+' '+yElbow
+      +' C '+(lShX+armGap-1)+' '+(yElbow-4)+' '+(lShX+armGap)+' '+(yArmTop+10)+' '+(lShX+armGap)+' '+(yArmTop+3)
+      +' L '+(lShX+armGap)+' '+yArmTop
       +' Z';
 
-    // Legs — spread stance, natural taper knee to ankle
-    var lLegX=cx-hiW*.35, rLegX=cx+hiW*.35;
-    var lBotX=cx-thW*.7, rBotX=cx+thW*.7;
-    var ca=Math.round(thW*.6), ank=5, ft=7;
-
-    var lleg='M '+(lLegX-thW*.5)+' '+yCr
-      +' C '+(lLegX-thW*.55)+' '+(yCr+18)+' '+(lBotX-ca*.7)+' '+(yKn-12)+' '+(lBotX-ca*.5)+' '+yKn
-      +' C '+(lBotX-ca*.4)+' '+(yKn+6)+' '+(lBotX-ank*1.1)+' '+(yAnk-12)+' '+(lBotX-ank)+' '+yAnk
-      +' L '+(lBotX-ft)+' '+(yAnk+5)+' L '+(lBotX+ft)+' '+(yAnk+5)
-      +' L '+(lBotX+ank)+' '+yAnk
-      +' C '+(lBotX+ca*.4)+' '+(yKn+6)+' '+(lBotX+ca*.7)+' '+(yKn-12)+' '+(lLegX+thW*.5)+' '+yCr
-      +' Z';
-    var rleg='M '+(rLegX-thW*.5)+' '+yCr
-      +' C '+(rLegX-thW*.55)+' '+(yCr+18)+' '+(rBotX-ca*.7)+' '+(yKn-12)+' '+(rBotX-ca*.5)+' '+yKn
-      +' C '+(rBotX-ca*.4)+' '+(yKn+6)+' '+(rBotX-ank*1.1)+' '+(yAnk-12)+' '+(rBotX-ank)+' '+yAnk
-      +' L '+(rBotX-ft)+' '+(yAnk+5)+' L '+(rBotX+ft)+' '+(yAnk+5)
-      +' L '+(rBotX+ank*1.1)+' '+yAnk
-      +' C '+(rBotX+ca*.4)+' '+(yKn+6)+' '+(rBotX+ca*.7)+' '+(yKn-12)+' '+(rLegX+thW*.5)+' '+yCr
+    // RIGHT arm — mirror
+    var rarm='M '+(rShX-armGap)+' '+yArmTop
+      +' C '+(rShX+biW*0.5)+' '+yArmTop+' '+(rShX+biW*1.0)+' '+(yArmTop+4)+' '+(rShX+biOut)+' '+(yArmTop+10)
+      +' C '+(rShX+biOut+1)+' '+(yElbow-12)+' '+(rShX+biSpread)+' '+(yElbow-4)+' '+(rShX+biSpread)+' '+yElbow
+      +' L '+(rShX+wOut)+' '+yWrist
+      +' C '+(rShX+wOut+2)+' '+(yWrist+2)+' '+(rShX+(wOut+foIn)*0.5+handHW+1)+' '+(yHandTop+4)+' '+(rShX+(wOut+foIn)*0.5+handHW)+' '+yHandMid
+      +' C '+(rShX+(wOut+foIn)*0.5+handHW)+' '+(yHandBot-2)+' '+(rShX+(wOut+foIn)*0.5+handHW-4)+' '+(yHandBot+6)+' '+(rShX+(wOut+foIn)*0.5)+' '+(yHandBot+7)
+      +' C '+(rShX+(wOut+foIn)*0.5-handHW+4)+' '+(yHandBot+6)+' '+(rShX+(wOut+foIn)*0.5-handHW)+' '+(yHandBot-2)+' '+(rShX+(wOut+foIn)*0.5-handHW)+' '+yHandMid
+      +' C '+(rShX+(wOut+foIn)*0.5-handHW)+' '+(yHandTop+4)+' '+(rShX+foIn-2)+' '+(yWrist+2)+' '+(rShX+foIn)+' '+yWrist
+      +' L '+(rShX+foIn-1)+' '+yElbow
+      +' C '+(rShX-armGap+1)+' '+(yElbow-4)+' '+(rShX-armGap)+' '+(yArmTop+10)+' '+(rShX-armGap)+' '+(yArmTop+3)
+      +' L '+(rShX-armGap)+' '+yArmTop
       +' Z';
 
-    return {torso, lleg, rleg, larm, rarm};
+    // Legs — wide thigh holding hip width down to lower thigh, subtle knee, calf bulge, ankle/foot
+    var legGap=Math.max(3, Math.round(thW*0.18));
+
+    // Y positions — knee lower, widest thigh extends much lower for gradual narrowing
+    var yKnAdj    = yCr + Math.round((yAnk-yCr)*0.57);      // knee lower
+    var yThighMid = yCr + Math.round((yKnAdj-yCr)*0.62);    // upper-thigh widest sits LOW (extends thigh down)
+    var yThighLow = yCr + Math.round((yKnAdj-yCr)*0.85);    // (kept for inner-side use if needed)
+    var yCalfMax  = yKnAdj + Math.round((yAnk-yKnAdj)*0.32);
+    var yFoot     = yAnk + 16;   // foot extends a bit deeper below ankle
+
+    // Outer X offsets — thigh stays wide, narrowing concentrated near knee
+    var oHipTop   = hiW;                                          // top
+    var oThighMid = Math.max(hiW, Math.round(hiW*1.02));          // upper-thigh widest (≈ hip)
+    var oThighLow = Math.max(thW, Math.round((hiW+thW)*0.5));     // lower-thigh — between hip and thigh measurement
+    var oKnee     = Math.max(12, Math.round(thW*0.93));           // knee — very subtle narrowing for gentle slope
+    var oCalf     = Math.max(14, Math.round(thW*1.0));            // calf bulges to roughly thigh measurement
+    var oAnkle    = Math.max(7,  Math.round(thW*0.42));   // straight leg — width same as before, rotation handles spread
+    var oFoot     = Math.max(22, Math.round(thW*1.40));   // foot extends further outward in stance direction
+
+    // Inner X offsets (smaller = closer to center) — monotonic-ish for clean inner edge
+    var iHipTop   = legGap;
+    var iThighMid = legGap;                                       // inner stays close at top
+    var iThighLow = Math.max(2, Math.round(thW*0.08));
+    var iKnee     = Math.max(3, Math.round(thW*0.14));            // inner knee out a touch
+    var iCalf     = Math.max(1, Math.round(thW*0.04));            // calf bulges back toward center
+    var iAnkle    = Math.max(2, Math.round(thW*0.10));   // straight leg — width same, rotation handles spread
+    var iFoot     = Math.max(2, Math.round(thW*0.10));
+
+    // LEFT leg — wide thigh held until lower-thigh, gentle knee, calf bulge
+    var lleg='M '+(cx-oHipTop)+' '+yCr
+      // Outer: top → upper-thigh widest (gentle curve from hip)
+      +' C '+(cx-oHipTop)+' '+(yCr+18)+' '+(cx-oThighMid)+' '+(yThighMid-12)+' '+(cx-oThighMid)+' '+yThighMid
+      // Outer: upper-thigh widest → knee (SINGLE smooth gradual narrowing)
+      +' C '+(cx-oThighMid)+' '+(yThighMid+8)+' '+(cx-oKnee)+' '+(yKnAdj-8)+' '+(cx-oKnee)+' '+yKnAdj
+      // Outer: knee → calf bulge (vertical tangent leaving knee)
+      +' C '+(cx-oKnee)+' '+(yKnAdj+10)+' '+(cx-oCalf-1)+' '+(yCalfMax-8)+' '+(cx-oCalf)+' '+yCalfMax
+      // Outer: calf → ankle
+      +' C '+(cx-oCalf+1)+' '+(yCalfMax+14)+' '+(cx-oAnkle-2)+' '+(yAnk-14)+' '+(cx-oAnkle)+' '+yAnk
+      // FOOT — curves out from ankle to wide rounded toe, sole, rounded inner toe, back to ankle
+      +' C '+(cx-oAnkle-3)+' '+(yAnk+5)+' '+(cx-oFoot-1)+' '+(yFoot-3)+' '+(cx-oFoot)+' '+(yFoot+2)
+      +' Q '+(cx-oFoot)+' '+(yFoot+8)+' '+(cx-oFoot+5)+' '+(yFoot+8)
+      +' L '+(cx-iFoot-4)+' '+(yFoot+8)
+      +' Q '+(cx-iFoot)+' '+(yFoot+8)+' '+(cx-iFoot)+' '+(yFoot+2)
+      +' C '+(cx-iFoot+1)+' '+(yFoot-3)+' '+(cx-iAnkle+3)+' '+(yAnk+5)+' '+(cx-iAnkle)+' '+yAnk
+      // Inner: ankle → calf bulge
+      +' C '+(cx-iAnkle-1)+' '+(yAnk-14)+' '+(cx-iCalf-1)+' '+(yCalfMax+14)+' '+(cx-iCalf)+' '+yCalfMax
+      // Inner: calf → knee
+      +' C '+(cx-iCalf+1)+' '+(yCalfMax-8)+' '+(cx-iKnee-1)+' '+(yKnAdj+10)+' '+(cx-iKnee)+' '+yKnAdj
+      // Inner: knee → upper-thigh widest (single smooth curve, gradual)
+      +' C '+(cx-iKnee)+' '+(yKnAdj-8)+' '+(cx-iThighMid)+' '+(yThighMid+8)+' '+(cx-iThighMid)+' '+yThighMid
+      // Inner: upper-thigh → top (close to center near crotch)
+      +' C '+(cx-iThighMid)+' '+(yThighMid-12)+' '+(cx-iHipTop)+' '+(yCr+18)+' '+(cx-iHipTop)+' '+yCr
+      +' Z';
+
+    // RIGHT leg — mirror
+    var rleg='M '+(cx+oHipTop)+' '+yCr
+      +' C '+(cx+oHipTop)+' '+(yCr+18)+' '+(cx+oThighMid)+' '+(yThighMid-12)+' '+(cx+oThighMid)+' '+yThighMid
+      +' C '+(cx+oThighMid)+' '+(yThighMid+8)+' '+(cx+oKnee)+' '+(yKnAdj-8)+' '+(cx+oKnee)+' '+yKnAdj
+      +' C '+(cx+oKnee)+' '+(yKnAdj+10)+' '+(cx+oCalf+1)+' '+(yCalfMax-8)+' '+(cx+oCalf)+' '+yCalfMax
+      +' C '+(cx+oCalf-1)+' '+(yCalfMax+14)+' '+(cx+oAnkle+2)+' '+(yAnk-14)+' '+(cx+oAnkle)+' '+yAnk
+      +' C '+(cx+oAnkle+3)+' '+(yAnk+5)+' '+(cx+oFoot+1)+' '+(yFoot-3)+' '+(cx+oFoot)+' '+(yFoot+2)
+      +' Q '+(cx+oFoot)+' '+(yFoot+8)+' '+(cx+oFoot-5)+' '+(yFoot+8)
+      +' L '+(cx+iFoot+4)+' '+(yFoot+8)
+      +' Q '+(cx+iFoot)+' '+(yFoot+8)+' '+(cx+iFoot)+' '+(yFoot+2)
+      +' C '+(cx+iFoot-1)+' '+(yFoot-3)+' '+(cx+iAnkle-3)+' '+(yAnk+5)+' '+(cx+iAnkle)+' '+yAnk
+      +' C '+(cx+iAnkle+1)+' '+(yAnk-14)+' '+(cx+iCalf+1)+' '+(yCalfMax+14)+' '+(cx+iCalf)+' '+yCalfMax
+      +' C '+(cx+iCalf-1)+' '+(yCalfMax-8)+' '+(cx+iKnee+1)+' '+(yKnAdj+10)+' '+(cx+iKnee)+' '+yKnAdj
+      +' C '+(cx+iKnee)+' '+(yKnAdj-8)+' '+(cx+iThighMid)+' '+(yThighMid+8)+' '+(cx+iThighMid)+' '+yThighMid
+      +' C '+(cx+iThighMid)+' '+(yThighMid-12)+' '+(cx+iHipTop)+' '+(yCr+18)+' '+(cx+iHipTop)+' '+yCr
+      +' Z';
+
+    return {torso, lleg, rleg, larm, rarm, shW, hiW, legGap, yNk, yCr};
   }
 
   var cur = buildBody(st.shoulders||21, st.chest||47, st.waist||44, st.hips||51, st.thigh||29, st.bicep||13.5);
@@ -2215,11 +2528,57 @@ function buildSilhouette(){
     var el=document.getElementById('c-'+p); if(el) el.setAttribute('d', cur[p]);
   });
 
+  // Apply outward rotations: arms angle out from shoulder, legs angle out from hip
+  var armAngle = 15;   // degrees from vertical
+  var legAngle = 10;
+  function setRot(id, deg, px, py){
+    var el=document.getElementById(id); if(el) el.setAttribute('transform','rotate('+deg+' '+px+' '+py+')');
+  }
+  setRot('c-larm',  armAngle, cx-cur.shW, cur.yNk+2);
+  setRot('c-rarm', -armAngle, cx+cur.shW, cur.yNk+2);
+  setRot('c-lleg',  legAngle, cx-cur.legGap, cur.yCr);
+  setRot('c-rleg', -legAngle, cx+cur.legGap, cur.yCr);
+
   var ih=tgt.hips||(tgt.waist*1.18), it=tgt.thigh||(tgt.waist*.6);
   var ide = buildBody(tgt.shoulders||22, tgt.chest||44, tgt.waist||33, ih, it, tgt.bicep||14);
   ['torso','lleg','rleg','larm','rarm'].forEach(function(p){
     var el=document.getElementById('i-'+p); if(el) el.setAttribute('d', ide[p]);
   });
+  setRot('i-larm',  armAngle, cx-ide.shW, ide.yNk+2);
+  setRot('i-rarm', -armAngle, cx+ide.shW, ide.yNk+2);
+  setRot('i-lleg',  legAngle, cx-ide.legGap, ide.yCr);
+  setRot('i-rleg', -legAngle, cx+ide.legGap, ide.yCr);
+
+  // LEAN BODY layer — what the user would look like at the selected target BF%
+  var gender = (data.profile&&data.profile.gender)||'male';
+  var bf = (typeof calcBodyFat==='function') ? calcBodyFat(st.waist, st.neck, st.height||70, gender) : null;
+  var leanEl = document.getElementById('lean-body');
+  var bfSel = document.getElementById('lean-bf-select');
+  var targetBF = bfSel ? parseInt(bfSel.value, 10) : 15;
+  if(bf && bf > targetBF){
+    var fatPts = bf - targetBF;
+    var lean = buildBody(
+      Math.max(15, (st.shoulders||21) - fatPts*0.10),   // shoulders barely shrink
+      Math.max(30, (st.chest||47)     - fatPts*0.18),   // chest moderately
+      Math.max(22, (st.waist||44)     - fatPts*0.50),   // WAIST shrinks most
+      Math.max(28, (st.hips||51)      - fatPts*0.40),   // hips significantly
+      Math.max(15, (st.thigh||29)     - fatPts*0.20),   // thighs moderately
+      Math.max(8,  (st.bicep||13.5)   - fatPts*0.05)    // biceps barely
+    );
+    ['torso','lleg','rleg','larm','rarm'].forEach(function(p){
+      var el=document.getElementById('l-'+p); if(el) el.setAttribute('d', lean[p]);
+    });
+    // Lean head — slightly smaller jaw shape
+    var lhead=document.getElementById('l-head');
+    if(lhead) lhead.setAttribute('d','M 130 6 C 147 6 147 19 147 28 C 147 33 143 38 137 42 C 134 45 132 47 130 47 C 128 47 126 45 123 42 C 117 38 113 33 113 28 C 113 19 113 6 130 6 Z');
+    setRot('l-larm',  armAngle, cx-lean.shW, lean.yNk+2);
+    setRot('l-rarm', -armAngle, cx+lean.shW, lean.yNk+2);
+    setRot('l-lleg',  legAngle, cx-lean.legGap, lean.yCr);
+    setRot('l-rleg', -legAngle, cx+lean.legGap, lean.yCr);
+    if(leanEl) leanEl.style.display = leanOverlayOn ? '' : 'none';
+  } else {
+    if(leanEl) leanEl.style.display = 'none';
+  }
 
   // Measurement labels on right side
   var lbl=document.getElementById('meas-labels'); if(!lbl) return;
@@ -2241,9 +2600,9 @@ function buildSilhouette(){
   var wWa=w2(st.waist||44,14,28,26,52)+cx;
   var wHi=w2(st.hips||51,18,34,34,58)+cx;
   var r=252;
-  addLine(wSh+2,76,r-2,76); addTxt('Shldr '+dispLen(st.shoulders||21),r,80);
-  addLine(wCh+2,102,r-2,102); addTxt('Chest '+dispLen(st.chest||47),r,106);
-  addLine(wWa+2,128,r-2,128); addTxt('Waist '+dispLen(st.waist||44),r,132);
+  addLine(wSh+2,72,r-2,72); addTxt('Shldr '+dispLen(st.shoulders||21),r,76);
+  addLine(wCh+2,86,r-2,86); addTxt('Chest '+dispLen(st.chest||47),r,90);
+  addLine(wWa+2,126,r-2,126); addTxt('Waist '+dispLen(st.waist||44),r,130);
   addLine(wHi+2,147,r-2,147); addTxt('Hips '+dispLen(st.hips||51),r,151);
   if(st.height){var ft=Math.floor(st.height/12),ins=Math.round(st.height%12);addTxt(ft+"'"+ins+'"',r,18,'#3a3a60');}
 }
@@ -2261,9 +2620,12 @@ function renderProfile(){
 
   // Stat grid
   var fields=[
-    {k:'weight',lbl:'Weight'},{k:'waist',lbl:'Waist'},{k:'hips',lbl:'Hips'},{k:'chest',lbl:'Chest'},
+    {k:'weight',lbl:'Weight'},{k:'height',lbl:'Height'},{k:'waist',lbl:'Waist'},{k:'hips',lbl:'Hips'},{k:'chest',lbl:'Chest'},
     {k:'shoulders',lbl:'Shoulders'},{k:'bicep',lbl:'Bicep'},{k:'thigh',lbl:'Thigh'},
-    {k:'neck',lbl:'Neck'},{k:'__whr__',lbl:'Waist/Hip'}
+    {k:'neck',lbl:'Neck'},{k:'__whr__',lbl:'Waist/Hip'},
+    {k:'__bmi__',lbl:'BMI'},{k:'__bmr__',lbl:'BMR'},
+    {k:'__tdee__',lbl:'TDEE'},{k:'__lbm__',lbl:'Lean mass'},
+    {k:'__fm__',lbl:'Fat mass'}
   ];
   var grid = document.getElementById('stat-grid');
   if(grid) grid.innerHTML = fields.map(function(f){
@@ -2271,6 +2633,52 @@ function renderProfile(){
     if(f.k==='__whr__'){
       val = (st.waist/st.hips).toFixed(2);
       return "<div class='stat-card hl'><div class='stat-lbl'>"+f.lbl+"</div><div class='stat-val' style='color:var(--gold)'>"+val+"</div></div>";
+    }
+    if(f.k==='__bmi__'){
+      // BMI = weight(kg) / height(m)^2. weight assumed in lbs, height in inches.
+      if(!st.weight || !st.height) return "<div class='stat-card'><div class='stat-lbl'>BMI</div><div class='stat-val' style='color:var(--text4)'>—</div><div class='stat-goal'>need wt + ht</div></div>";
+      var wKg = st.weight/2.20462, hM = st.height*0.0254;
+      var bmi = (wKg / (hM*hM)).toFixed(1);
+      var bmiCat = bmi<18.5?'underweight':bmi<25?'normal':bmi<30?'overweight':'obese';
+      var bmiColor = bmi<18.5?'var(--blue)':bmi<25?'var(--green)':bmi<30?'var(--gold)':'var(--red)';
+      return "<div class='stat-card hl'><div class='stat-lbl'>BMI</div><div class='stat-val' style='color:"+bmiColor+"'>"+bmi+"</div><div class='stat-goal' style='color:"+bmiColor+";opacity:0.7'>"+bmiCat+"</div></div>";
+    }
+    if(f.k==='__bmr__' || f.k==='__tdee__'){
+      // Mifflin-St Jeor BMR
+      if(!st.weight || !st.height) return "<div class='stat-card'><div class='stat-lbl'>"+f.lbl+"</div><div class='stat-val' style='color:var(--text4)'>—</div><div class='stat-goal'>need wt + ht</div></div>";
+      var wKgB = st.weight/2.20462, hCm = st.height*2.54;
+      var prof = data.profile||{}; var gender = prof.gender||'male';
+      // Age from dob, default 30
+      var age = 30;
+      if(prof.dob){ try{ var dob=new Date(prof.dob); var now=new Date(); age=now.getFullYear()-dob.getFullYear(); if(now.getMonth()<dob.getMonth()||(now.getMonth()===dob.getMonth()&&now.getDate()<dob.getDate())) age--; }catch(e){} }
+      var bmr = 10*wKgB + 6.25*hCm - 5*age + (gender==='female'?-161:5);
+      if(f.k==='__bmr__'){
+        return "<div class='stat-card hl'><div class='stat-lbl'>BMR</div><div class='stat-val' style='color:var(--gold)'>"+Math.round(bmr)+"</div><div class='stat-goal'>cal/day at rest</div></div>";
+      }
+      // TDEE = BMR × activity factor (1.55 = moderate, training 5+/wk)
+      var tdee = Math.round(bmr * 1.55);
+      return "<div class='stat-card hl'><div class='stat-lbl'>TDEE</div><div class='stat-val' style='color:var(--gold)'>"+tdee+"</div><div class='stat-goal'>cal/day · moderate</div></div>";
+    }
+    if(f.k==='__lbm__' || f.k==='__fm__'){
+      // Lean mass / Fat mass from weight + BF%
+      if(!st.weight){ return "<div class='stat-card'><div class='stat-lbl'>"+f.lbl+"</div><div class='stat-val' style='color:var(--text4)'>—</div><div class='stat-goal'>need wt</div></div>"; }
+      var profG = (data.profile&&data.profile.gender)||'male';
+      var bf = (typeof calcBodyFat==='function') ? calcBodyFat(st.waist, st.neck, st.height||70, profG) : null;
+      if(bf===null) return "<div class='stat-card'><div class='stat-lbl'>"+f.lbl+"</div><div class='stat-val' style='color:var(--text4)'>—</div><div class='stat-goal'>need neck</div></div>";
+      var lbm = st.weight * (1 - bf/100);
+      var fm = st.weight * (bf/100);
+      var u2 = getUnits();
+      var conv = u2.weight==='lbs' ? 1 : 0.453592;
+      var unitL = u2.weight==='lbs'?'lbs':'kg';
+      if(f.k==='__lbm__'){
+        return "<div class='stat-card hl'><div class='stat-lbl'>Lean mass</div><div class='stat-val' style='color:var(--green)'>"+(lbm*conv).toFixed(1)+"</div><div class='stat-goal'>"+unitL+" · LBM</div></div>";
+      }
+      return "<div class='stat-card hl'><div class='stat-lbl'>Fat mass</div><div class='stat-val' style='color:var(--gold)'>"+(fm*conv).toFixed(1)+"</div><div class='stat-goal'>"+unitL+" · @ "+bf+"% BF</div></div>";
+    }
+    if(f.k==='height'){
+      if(!st.height) return "<div class='stat-card'><div class='stat-lbl'>Height</div><div class='stat-val' style='color:var(--text4)'>—</div></div>";
+      var ft = Math.floor(st.height/12), inc = Math.round(st.height%12);
+      return "<div class='stat-card hl'><div class='stat-lbl'>Height</div><div class='stat-val' style='color:var(--gold)'>"+ft+"'"+inc+'"'+"</div><div class='stat-goal'>"+st.height+'"'+"</div></div>";
     }
     if(f.k==='weight'){
       val = st.weight>0 ? dispWt(st.weight) : '—';
@@ -2343,6 +2751,7 @@ function renderProfile(){
   renderProgressPhotos();
   checkMeasurementPrompt();
   renderBodyFatCard();
+  renderCapabilityCard();
   renderGoalTimeline();
   renderHallOfFame();
   renderBeforeAfter();
@@ -3980,7 +4389,7 @@ function exportProgressReport(){
   });
   if(recLines) html+='<div class="section"><h2>TOP RECORDS</h2>'+recLines+'</div>';
 
-  html+='<div style="text-align:center;margin-top:20px;color:#333355;font-size:10px">Generated by StatSheet RPG</div>'
+  html+='<div style="text-align:center;margin-top:20px;color:#333355;font-size:10px">Generated by RPME</div>'
     +'</body></html>';
 
   // Open in new tab
@@ -5791,7 +6200,7 @@ function exportForAI(){
   var hist=getMeasHistory(), log=getWorkoutLog(), sore=getSoreMuscles(), u=getUnits();
   var lines=[];
 
-  lines.push('# My Fitness Data — StatSheet RPG');
+  lines.push('# My Fitness Data — RPME');
   lines.push('Generated: '+new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}));
   lines.push('');lines.push('---');lines.push('');
 
@@ -5941,7 +6350,7 @@ var ONBOARDING_STEPS = [
   {
     id: 'welcome',
     icon: '⚔',
-    title: 'Welcome to StatSheet RPG',
+    title: 'Welcome to RPME',
     subtitle: 'Your fitness journey starts here',
     desc: 'Track workouts, build habits, and level up your body like a video game. Your progress becomes your character.',
     action: 'Get started',
@@ -6234,7 +6643,7 @@ function exportBackup(){
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
-  a.download = 'statsheet-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.download = 'rpme-backup-'+new Date().toISOString().slice(0,10)+'.json';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
