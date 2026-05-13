@@ -14,7 +14,7 @@
     background: #1a1a1a;
     color: #f0f0f0;
     min-height: 100vh;
-    padding-bottom: 32px;
+    padding-bottom: 40px;
   }
 
   header {
@@ -23,18 +23,8 @@
     text-align: center;
   }
 
-  header h1 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 0.3px;
-  }
-
-  header p {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.85);
-    margin-top: 2px;
-  }
+  header h1 { font-size: 1.4rem; font-weight: 700; color: #fff; }
+  header p { font-size: 0.8rem; color: rgba(255,255,255,0.85); margin-top: 2px; }
 
   .btn-generate {
     display: block;
@@ -48,16 +38,11 @@
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    letter-spacing: 0.3px;
     transition: background 0.15s;
   }
-
   .btn-generate:active { background: #c45e08; }
 
-  #plan {
-    padding: 16px;
-    display: none;
-  }
+  #plan { padding: 16px; display: none; }
 
   .day-card {
     background: #252525;
@@ -83,7 +68,6 @@
     gap: 10px;
     align-items: flex-start;
   }
-
   .meal-row:last-child { border-bottom: none; }
 
   .meal-label {
@@ -118,10 +102,15 @@
     border-radius: 4px;
     margin-left: 6px;
     vertical-align: middle;
-    letter-spacing: 0.3px;
   }
 
-  .swap-btn {
+  .meal-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .swap-btn, .shop-btn {
     background: none;
     border: 1px solid #444;
     color: #888;
@@ -129,16 +118,16 @@
     padding: 3px 8px;
     border-radius: 6px;
     cursor: pointer;
-    white-space: nowrap;
-    margin-top: 2px;
     transition: all 0.15s;
-    display: block;
   }
+  .swap-btn:active { background: #333; color: #E8720C; border-color: #E8720C; }
+  .shop-btn:active { background: #333; color: #5cb85c; border-color: #5cb85c; }
 
-  .swap-btn:active {
-    background: #333;
-    color: #E8720C;
-    border-color: #E8720C;
+  .added-flash {
+    font-size: 0.7rem;
+    color: #5cb85c;
+    display: none;
+    margin-top: 4px;
   }
 
   .btn-copy {
@@ -155,7 +144,6 @@
     cursor: pointer;
     transition: background 0.15s;
   }
-
   .btn-copy:active { background: #3a3a3a; }
 
   .copied-msg {
@@ -173,6 +161,85 @@
     margin-top: 16px;
     padding: 0 16px;
   }
+
+  /* Shopping List */
+  #shopping-section {
+    margin: 0 16px;
+    display: none;
+  }
+
+  .shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .shop-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #E8720C;
+  }
+
+  .btn-clear {
+    background: none;
+    border: 1px solid #555;
+    color: #888;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .btn-clear:active { color: #e05555; border-color: #e05555; }
+
+  .shop-card {
+    background: #252525;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .shop-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #2e2e2e;
+    cursor: pointer;
+  }
+  .shop-item:last-child { border-bottom: none; }
+  .shop-item.checked { opacity: 0.4; }
+
+  .shop-check {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #555;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: #5cb85c;
+  }
+  .shop-item.checked .shop-check {
+    background: #5cb85c;
+    border-color: #5cb85c;
+  }
+
+  .shop-item-name {
+    font-size: 0.95rem;
+    flex: 1;
+  }
+  .shop-item.checked .shop-item-name {
+    text-decoration: line-through;
+    color: #666;
+  }
+
+  .divider {
+    height: 1px;
+    background: #2e2e2e;
+    margin: 20px 16px 16px;
+  }
 </style>
 </head>
 <body>
@@ -186,62 +253,86 @@
 
 <div id="plan"></div>
 
+<div id="shopping-section">
+  <div class="divider"></div>
+  <div class="shop-header">
+    <span class="shop-title">🛒 Shopping List</span>
+    <button class="btn-clear" onclick="clearList()">Clear all</button>
+  </div>
+  <div class="shop-card" id="shop-list"></div>
+</div>
+
 <script>
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const WORK_DAYS = [0,1,2,3,4];
 
 const BREAKFAST = [
-  'Scrambled eggs (x4) + turkey bacon + oatmeal + banana',
-  'Eggs any style + toast + fruit on the side',
-  'Egg & cheese sandwich on toast + fruit',
-  'French toast + turkey bacon + fruit',
-  'Smoked salmon + scrambled eggs + toast',
+  { m: 'Scrambled eggs (x4) + turkey bacon + oatmeal + banana', i: ['Eggs','Turkey bacon','Oatmeal','Bananas'] },
+  { m: 'Eggs any style + toast + fruit', i: ['Eggs','Bread','Fruit'] },
+  { m: 'Egg & cheese sandwich on toast + fruit', i: ['Eggs','Cheese','Bread','Fruit'] },
+  { m: 'French toast + turkey bacon + fruit', i: ['Eggs','Bread','Turkey bacon','Fruit'] },
+  { m: 'Smoked salmon + scrambled eggs + toast', i: ['Smoked salmon','Eggs','Bread'] },
+  { m: 'Protein pancakes + turkey bacon', i: ['Pancake mix','Eggs','Turkey bacon'] },
+  { m: 'Breakfast burrito: eggs + cheese + turkey bacon in tortilla', i: ['Eggs','Cheese','Turkey bacon','Flour tortillas'] },
+  { m: 'Bagel + cream cheese + smoked salmon', i: ['Bagels','Cream cheese','Smoked salmon'] },
 ];
 
 const WORK_LUNCH = [
-  'Grilled chicken breast (~8oz) — cold is fine',
-  'Hamburger patty — pack with bun or wrap',
-  'Pinwheel wrap: chicken + cheese + honey mustard — slice into rounds',
-  'Pinwheel wrap: turkey + cheese + honey mustard — slice into rounds',
-  'Pinwheel wrap: chicken salad (shredded chicken + mayo) + cheese — slice into rounds',
-  'Nachos container: baked chips + seasoned ground beef + cheese + sour cream',
-  'Chicken sandwich: grilled chicken + cheese + honey mustard on a roll',
-  'Turkey club sandwich: turkey + cheese + bacon + mayo on toasted bread',
-  'Steak sandwich: thin sliced steak + cheese + honey mustard on hoagie roll',
-  'BLT sandwich: bacon + lettuce + tomato + mayo on toasted bread',
-  'Grilled cheese + deli turkey: grilled cheese sandwich + turkey slices on the side',
+  { m: 'Grilled chicken breast (~8oz) — cold is fine', i: ['Chicken breast'] },
+  { m: 'Hamburger patty — pack with bun or wrap', i: ['Ground beef','Burger buns'] },
+  { m: 'Pinwheel wrap: chicken + cheese + honey mustard — slice into rounds', i: ['Chicken breast','Cheese','Honey mustard','Flour tortillas'] },
+  { m: 'Pinwheel wrap: turkey + cheese + honey mustard — slice into rounds', i: ['Deli turkey','Cheese','Honey mustard','Flour tortillas'] },
+  { m: 'Pinwheel wrap: chicken salad (shredded chicken + mayo) + cheese — slice into rounds', i: ['Chicken breast','Mayo','Cheese','Flour tortillas'] },
+  { m: 'Nachos container: baked chips + seasoned ground beef + cheese + sour cream', i: ['Tortilla chips','Ground beef','Cheese','Sour cream'] },
+  { m: 'Chicken sandwich: grilled chicken + cheese + honey mustard on a roll', i: ['Chicken breast','Cheese','Honey mustard','Hoagie rolls'] },
+  { m: 'Turkey club: turkey + cheese + bacon + mayo on toasted bread', i: ['Deli turkey','Cheese','Bacon','Mayo','Bread'] },
+  { m: 'Steak sandwich: thin sliced steak + cheese + honey mustard on hoagie', i: ['Steak','Cheese','Honey mustard','Hoagie rolls'] },
+  { m: 'BLT: bacon + tomato + mayo on toasted bread', i: ['Bacon','Tomato','Mayo','Bread'] },
+  { m: 'Grilled cheese + deli turkey on the side', i: ['Bread','Cheese','Butter','Deli turkey'] },
+  { m: 'Chicken quesadilla — slice into wedges, cold is fine', i: ['Chicken breast','Cheese','Flour tortillas'] },
+  { m: 'Tuna melt sandwich: tuna + mayo + cheese on toasted bread', i: ['Canned tuna','Mayo','Cheese','Bread'] },
+  { m: 'BBQ chicken sandwich: grilled chicken + BBQ sauce + cheese on a roll', i: ['Chicken breast','BBQ sauce','Cheese','Burger buns'] },
+  { m: 'Chicken caesar wrap: chicken + cheese + caesar dressing in tortilla', i: ['Chicken breast','Cheese','Caesar dressing','Flour tortillas'] },
 ];
 
 const WORK_SIDES = 'Sides: yogurt cup + fruit (grapes/blueberries/apple) + carrots + hard boiled egg';
 
 const DINNER = [
-  'Steak + white rice',
-  'Baked salmon + white rice',
-  'Ground beef stir fry over rice',
-  'Spaghetti with ground beef meat sauce',
-  'Teriyaki chicken over rice',
-  'Grilled shrimp + pasta',
-  'Baked chicken thighs + white rice',
-  'Homemade burgers + cheese',
-  'Nachos: ground beef + cheese + sour cream + salsa + baked chips',
-  'Grilled salmon + pasta',
+  { m: 'Steak + white rice', i: ['Steak','White rice'] },
+  { m: 'Baked salmon + white rice', i: ['Salmon','White rice'] },
+  { m: 'Ground beef stir fry over rice', i: ['Ground beef','White rice','Soy sauce'] },
+  { m: 'Spaghetti with ground beef meat sauce', i: ['Ground beef','Spaghetti','Pasta sauce'] },
+  { m: 'Teriyaki chicken over rice', i: ['Chicken breast','White rice','Teriyaki sauce'] },
+  { m: 'Grilled shrimp + pasta', i: ['Shrimp','Pasta','Butter'] },
+  { m: 'Baked chicken thighs + white rice', i: ['Chicken thighs','White rice'] },
+  { m: 'Homemade burgers + cheese', i: ['Ground beef','Burger buns','Cheese'] },
+  { m: 'Nachos: ground beef + cheese + sour cream + salsa + baked chips', i: ['Ground beef','Tortilla chips','Cheese','Sour cream','Salsa'] },
+  { m: 'Grilled salmon + pasta', i: ['Salmon','Pasta','Butter'] },
+  { m: 'BBQ ribs + white rice', i: ['Pork ribs','BBQ sauce','White rice'] },
+  { m: 'Chicken alfredo pasta', i: ['Chicken breast','Pasta','Alfredo sauce','Parmesan cheese'] },
+  { m: 'Beef tacos: ground beef + cheese + sour cream + taco shells', i: ['Ground beef','Taco shells','Cheese','Sour cream'] },
+  { m: 'Shrimp alfredo', i: ['Shrimp','Pasta','Alfredo sauce','Parmesan cheese'] },
+  { m: 'Chicken parmesan + pasta', i: ['Chicken breast','Pasta sauce','Pasta','Mozzarella cheese','Bread crumbs'] },
+  { m: 'Smash burgers + baked fries', i: ['Ground beef','Burger buns','Cheese','Potatoes'] },
+  { m: 'Honey garlic chicken + rice', i: ['Chicken breast','White rice','Honey','Garlic'] },
+  { m: 'Beef stir fry over rice', i: ['Beef','White rice','Soy sauce'] },
 ];
 
 const WEEKEND_LUNCH = [
-  'Homemade burgers + cheese',
-  'Nachos: ground beef + cheese + sour cream + salsa',
-  'Ground beef stir fry over rice',
-  'Chicken and rice — whatever seasoning you like',
-  'Taco bowl: ground beef + rice + cheese + sour cream',
-  'Grilled chicken + rice',
+  { m: 'Homemade burgers + cheese', i: ['Ground beef','Burger buns','Cheese'] },
+  { m: 'Nachos: ground beef + cheese + sour cream + salsa', i: ['Ground beef','Tortilla chips','Cheese','Sour cream','Salsa'] },
+  { m: 'Ground beef stir fry over rice', i: ['Ground beef','White rice','Soy sauce'] },
+  { m: 'Chicken and rice — whatever seasoning you like', i: ['Chicken breast','White rice'] },
+  { m: 'Taco bowl: ground beef + rice + cheese + sour cream', i: ['Ground beef','White rice','Cheese','Sour cream'] },
+  { m: 'Grilled chicken + rice', i: ['Chicken breast','White rice'] },
+  { m: 'Beef tacos: ground beef + cheese + sour cream + taco shells', i: ['Ground beef','Taco shells','Cheese','Sour cream'] },
+  { m: 'BBQ chicken + rice', i: ['Chicken breast','BBQ sauce','White rice'] },
+  { m: 'Quesadillas: chicken or beef + cheese', i: ['Chicken breast','Cheese','Flour tortillas'] },
 ];
 
-// Store current plan so copy always reflects swaps
 let currentPlan = [];
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function pickUnique(arr, count) {
   const shuffled = [...arr].sort(() => Math.random() - 0.5);
@@ -252,27 +343,43 @@ function pickUnique(arr, count) {
 
 function swapMeal(dayIndex, mealType) {
   const isWork = WORK_DAYS.includes(dayIndex);
-  let newMeal;
+  let picked;
+  if (mealType === 'breakfast') picked = pick(BREAKFAST);
+  else if (mealType === 'lunch') picked = pick(isWork ? WORK_LUNCH : WEEKEND_LUNCH);
+  else picked = pick(DINNER);
 
-  if (mealType === 'breakfast') {
-    newMeal = pick(BREAKFAST);
-    currentPlan[dayIndex].breakfast = newMeal;
-  } else if (mealType === 'lunch') {
-    newMeal = pick(isWork ? WORK_LUNCH : WEEKEND_LUNCH);
-    currentPlan[dayIndex].lunch = newMeal;
-  } else if (mealType === 'dinner') {
-    newMeal = pick(DINNER);
-    currentPlan[dayIndex].dinner = newMeal;
-  }
+  currentPlan[dayIndex][mealType] = picked;
 
-  // Update just that meal text in the DOM
   const el = document.getElementById(`meal-${dayIndex}-${mealType}`);
   if (el) {
     if (mealType === 'lunch' && isWork) {
-      el.innerHTML = newMeal + `<div class="lunch-sides">${WORK_SIDES}</div>`;
+      el.innerHTML = picked.m + `<div class="lunch-sides">${WORK_SIDES}</div>`;
     } else {
-      el.textContent = newMeal;
+      el.textContent = picked.m;
     }
+  }
+}
+
+function addToShop(dayIndex, mealType) {
+  const meal = currentPlan[dayIndex][mealType];
+  if (!meal) return;
+  const ingredients = meal.i || [];
+  let list = getList();
+  let added = 0;
+  ingredients.forEach(item => {
+    if (!list.find(l => l.name.toLowerCase() === item.toLowerCase())) {
+      list.push({ name: item, checked: false });
+      added++;
+    }
+  });
+  saveList(list);
+  renderShopList();
+
+  const flash = document.getElementById(`flash-${dayIndex}-${mealType}`);
+  if (flash) {
+    flash.textContent = added > 0 ? `✓ ${added} item${added>1?'s':''} added` : '✓ Already in list';
+    flash.style.display = 'block';
+    setTimeout(() => flash.style.display = 'none', 2000);
   }
 }
 
@@ -282,14 +389,13 @@ function generate() {
 
   const breakfasts = pickUnique(BREAKFAST, 7);
   const dinners = pickUnique(DINNER, 7);
-
   currentPlan = [];
+
   let html = '';
 
   DAYS.forEach((day, i) => {
     const isWork = WORK_DAYS.includes(i);
-    const lunch = isWork ? pick(WORK_LUNCH) : pick(WEEKEND_LUNCH);
-
+    const lunch = pick(isWork ? WORK_LUNCH : WEEKEND_LUNCH);
     currentPlan.push({ breakfast: breakfasts[i], lunch, dinner: dinners[i], isWork });
 
     html += `
@@ -298,24 +404,36 @@ function generate() {
         <div class="meal-row">
           <span class="meal-label">Breakfast</span>
           <div style="flex:1">
-            <div class="meal-text" id="meal-${i}-breakfast">${breakfasts[i]}</div>
-            <button class="swap-btn" onclick="swapMeal(${i},'breakfast')">🔄 Swap</button>
+            <div class="meal-text" id="meal-${i}-breakfast">${breakfasts[i].m}</div>
+            <div class="meal-actions">
+              <button class="swap-btn" onclick="swapMeal(${i},'breakfast')">🔄 Swap</button>
+              <button class="shop-btn" onclick="addToShop(${i},'breakfast')">🛒 Add ingredients</button>
+            </div>
+            <div class="added-flash" id="flash-${i}-breakfast"></div>
           </div>
         </div>
         <div class="meal-row">
           <span class="meal-label">Lunch${isWork ? '<span class="work-tag">work</span>' : ''}</span>
           <div style="flex:1">
             <div class="meal-text" id="meal-${i}-lunch">
-              ${lunch}${isWork ? `<div class="lunch-sides">${WORK_SIDES}</div>` : ''}
+              ${lunch.m}${isWork ? `<div class="lunch-sides">${WORK_SIDES}</div>` : ''}
             </div>
-            <button class="swap-btn" onclick="swapMeal(${i},'lunch')">🔄 Swap</button>
+            <div class="meal-actions">
+              <button class="swap-btn" onclick="swapMeal(${i},'lunch')">🔄 Swap</button>
+              <button class="shop-btn" onclick="addToShop(${i},'lunch')">🛒 Add ingredients</button>
+            </div>
+            <div class="added-flash" id="flash-${i}-lunch"></div>
           </div>
         </div>
         <div class="meal-row">
           <span class="meal-label">Dinner</span>
           <div style="flex:1">
-            <div class="meal-text" id="meal-${i}-dinner">${dinners[i]}</div>
-            <button class="swap-btn" onclick="swapMeal(${i},'dinner')">🔄 Swap</button>
+            <div class="meal-text" id="meal-${i}-dinner">${dinners[i].m}</div>
+            <div class="meal-actions">
+              <button class="swap-btn" onclick="swapMeal(${i},'dinner')">🔄 Swap</button>
+              <button class="shop-btn" onclick="addToShop(${i},'dinner')">🛒 Add ingredients</button>
+            </div>
+            <div class="added-flash" id="flash-${i}-dinner"></div>
           </div>
         </div>
       </div>`;
@@ -324,9 +442,10 @@ function generate() {
   html += `
     <button class="btn-copy" onclick="copyPlan()">📋 Copy</button>
     <div class="copied-msg" id="copied">✓ Copied! Paste it into a text message.</div>
-    <p class="note">Tap 🔄 Swap on any meal to replace it • Tap generate again for a new week</p>`;
+    <p class="note">🔄 Swap any meal • 🛒 Add ingredients to shopping list</p>`;
 
   plan.innerHTML = html;
+  renderShopList();
   window.scrollTo({ top: document.querySelector('#plan').offsetTop - 10, behavior: 'smooth' });
 }
 
@@ -334,24 +453,65 @@ function copyPlan() {
   let text = "FINN'S MEAL PLAN FOR THE WEEK\n\n";
   currentPlan.forEach((day, i) => {
     text += `${DAYS[i].toUpperCase()}\n`;
-    text += `  Breakfast: ${day.breakfast}\n`;
-    text += `  Lunch: ${day.lunch}\n`;
-    if (day.isWork) text += `  (Pack: yogurt cup + fruit + carrots)\n`;
-    text += `  Dinner: ${day.dinner}\n\n`;
+    text += `  Breakfast: ${day.breakfast.m}\n`;
+    text += `  Lunch: ${day.lunch.m}\n`;
+    if (day.isWork) text += `  (Pack: yogurt cup + fruit + carrots + hard boiled egg)\n`;
+    text += `  Dinner: ${day.dinner.m}\n\n`;
   });
   text += 'Portions: ~8oz of protein per meal. Season however you like!';
 
   navigator.clipboard.writeText(text).then(() => {
     const msg = document.getElementById('copied');
     if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 3000); }
-  }).catch(() => {
-    alert('Copy failed — screenshot the plan instead!');
-  });
+  }).catch(() => alert('Copy failed — screenshot the plan instead!'));
+}
+
+// Shopping list
+function getList() {
+  try { return JSON.parse(localStorage.getItem('meal_shop') || '[]'); } catch { return []; }
+}
+
+function saveList(list) {
+  localStorage.setItem('meal_shop', JSON.stringify(list));
+}
+
+function toggleItem(index) {
+  const list = getList();
+  if (list[index]) list[index].checked = !list[index].checked;
+  saveList(list);
+  renderShopList();
+}
+
+function clearList() {
+  saveList([]);
+  renderShopList();
+}
+
+function renderShopList() {
+  const section = document.getElementById('shopping-section');
+  const container = document.getElementById('shop-list');
+  const list = getList();
+
+  if (list.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  container.innerHTML = list.map((item, i) => `
+    <div class="shop-item ${item.checked ? 'checked' : ''}" onclick="toggleItem(${i})">
+      <div class="shop-check">${item.checked ? '✓' : ''}</div>
+      <span class="shop-item-name">${item.name}</span>
+    </div>
+  `).join('');
 }
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js');
 }
+
+// Load shopping list on start
+renderShopList();
 </script>
 </body>
 </html>
