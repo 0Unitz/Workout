@@ -205,9 +205,14 @@ const WORK_LUNCH = [
   'Pinwheel wrap: turkey + cheese + honey mustard — slice into rounds',
   'Pinwheel wrap: chicken salad (shredded chicken + mayo) + cheese — slice into rounds',
   'Nachos container: baked chips + seasoned ground beef + cheese + sour cream',
+  'Chicken sandwich: grilled chicken + cheese + honey mustard on a roll',
+  'Turkey club sandwich: turkey + cheese + bacon + mayo on toasted bread',
+  'Steak sandwich: thin sliced steak + cheese + honey mustard on hoagie roll',
+  'BLT sandwich: bacon + lettuce + tomato + mayo on toasted bread',
+  'Grilled cheese + deli turkey: grilled cheese sandwich + turkey slices on the side',
 ];
 
-const WORK_SIDES = 'Sides: yogurt cup + fruit (grapes/blueberries/apple) + carrots';
+const WORK_SIDES = 'Sides: yogurt cup + fruit (grapes/blueberries/apple) + carrots + hard boiled egg';
 
 const DINNER = [
   'Steak + white rice',
@@ -317,7 +322,7 @@ function generate() {
   });
 
   html += `
-    <button class="btn-copy" onclick="copyPlan()">📋 Copy to Send to Mom</button>
+    <button class="btn-copy" onclick="copyPlan()">📋 Copy</button>
     <div class="copied-msg" id="copied">✓ Copied! Paste it into a text message.</div>
     <p class="note">Tap 🔄 Swap on any meal to replace it • Tap generate again for a new week</p>`;
 
