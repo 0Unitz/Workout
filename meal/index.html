@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8720C">
+<link rel="manifest" href="manifest.json">
+<title>Finn's Meal Planner</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    color: #f0f0f0;
+    min-height: 100vh;
+    padding-bottom: 32px;
+  }
+
+  header {
+    background: #E8720C;
+    padding: 18px 16px 14px;
+    text-align: center;
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.3px;
+  }
+
+  header p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.85);
+    margin-top: 2px;
+  }
+
+  .btn-generate {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 20px auto 0;
+    padding: 16px;
+    background: #E8720C;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.15s;
+  }
+
+  .btn-generate:active { background: #c45e08; }
+
+  #plan {
+    padding: 16px;
+    display: none;
+  }
+
+  .day-card {
+    background: #252525;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .day-header {
+    background: #2e2e2e;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #E8720C;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .meal-row {
+    padding: 10px 14px;
+    border-bottom: 1px solid #2e2e2e;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .meal-row:last-child { border-bottom: none; }
+
+  .meal-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 60px;
+    padding-top: 2px;
+  }
+
+  .meal-text {
+    font-size: 0.9rem;
+    color: #f0f0f0;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .lunch-sides {
+    font-size: 0.78rem;
+    color: #aaa;
+    margin-top: 4px;
+  }
+
+  .work-tag {
+    display: inline-block;
+    background: #333;
+    color: #aaa;
+    font-size: 0.65rem;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-copy {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 4px auto 0;
+    padding: 14px;
+    background: #2e2e2e;
+    color: #E8720C;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 2px solid #E8720C;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-copy:active { background: #3a3a3a; }
+
+  .copied-msg {
+    text-align: center;
+    color: #5cb85c;
+    font-size: 0.85rem;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .note {
+    text-align: center;
+    color: #666;
+    font-size: 0.75rem;
+    margin-top: 16px;
+    padding: 0 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍽 Finn's Meal Planner</h1>
+  <p>Tap generate to get this week's meals</p>
+</header>
+
+<button class="btn-generate" onclick="generate()">Generate This Week's Meals</button>
+
+<div id="plan"></div>
+
+<script>
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const WORK_DAYS = [0,1,2,3,4]; // Mon-Fri
+
+const BREAKFAST = [
+  'Scrambled eggs (x4) + turkey bacon + oatmeal + banana',
+  'Eggs any style + toast + fruit on the side',
+  'Egg & cheese sandwich on toast + fruit',
+  'French toast + turkey bacon + fruit',
+  'Smoked salmon + scrambled eggs + toast',
+];
+
+const WORK_LUNCH = [
+  'Grilled chicken breast (~8oz) — cold is fine',
+  'Hamburger patty — pack with bun or wrap',
+  'Pinwheel wrap: chicken + cheese + honey mustard — slice into rounds',
+  'Pinwheel wrap: turkey + cheese + honey mustard — slice into rounds',
+  'Pinwheel wrap: chicken salad (shredded chicken + mayo) + cheese — slice into rounds',
+  'Nachos container: baked chips + seasoned ground beef + cheese + sour cream',
+];
+
+const WORK_SIDES = 'Sides: yogurt cup + fruit (grapes/blueberries/apple) + carrots';
+
+const DINNER = [
+  'Steak + white rice',
+  'Baked salmon + white rice',
+  'Ground beef stir fry over rice',
+  'Spaghetti with ground beef meat sauce',
+  'Teriyaki chicken over rice',
+  'Grilled shrimp + pasta',
+  'Baked chicken thighs + white rice',
+  'Homemade burgers + cheese',
+  'Nachos: ground beef + cheese + sour cream + salsa + baked chips',
+  'Grilled salmon + pasta',
+];
+
+const WEEKEND_LUNCH = [
+  'Homemade burgers + cheese',
+  'Nachos: ground beef + cheese + sour cream + salsa',
+  'Ground beef stir fry over rice',
+  'Chicken and rice — whatever seasoning you like',
+  'Taco bowl: ground beef + rice + cheese + sour cream',
+  'Grilled chicken + rice',
+];
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function pickUnique(arr, count) {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  const result = [];
+  for (let i = 0; i < count; i++) result.push(shuffled[i % shuffled.length]);
+  return result;
+}
+
+function generate() {
+  const plan = document.getElementById('plan');
+  plan.style.display = 'block';
+
+  const breakfasts = pickUnique(BREAKFAST, 7);
+  const dinners = pickUnique(DINNER, 7);
+
+  let html = '';
+  let copyText = "FINN'S MEAL PLAN FOR THE WEEK\n\n";
+
+  DAYS.forEach((day, i) => {
+    const isWork = WORK_DAYS.includes(i);
+    const lunch = isWork ? pick(WORK_LUNCH) : pick(WEEKEND_LUNCH);
+    const lunchSides = isWork ? WORK_SIDES : '';
+
+    html += `
+      <div class="day-card">
+        <div class="day-header">${day}</div>
+        <div class="meal-row">
+          <span class="meal-label">Breakfast</span>
+          <span class="meal-text">${breakfasts[i]}</span>
+        </div>
+        <div class="meal-row">
+          <span class="meal-label">Lunch${isWork ? '<span class="work-tag">work</span>' : ''}</span>
+          <span class="meal-text">
+            ${lunch}
+            ${lunchSides ? `<div class="lunch-sides">${lunchSides}</div>` : ''}
+          </span>
+        </div>
+        <div class="meal-row">
+          <span class="meal-label">Dinner</span>
+          <span class="meal-text">${dinners[i]}</span>
+        </div>
+      </div>`;
+
+    copyText += `${day.toUpperCase()}\n`;
+    copyText += `  Breakfast: ${breakfasts[i]}\n`;
+    copyText += `  Lunch: ${lunch}\n`;
+    if (isWork) copyText += `  (Pack: yogurt cup + fruit + carrots)\n`;
+    copyText += `  Dinner: ${dinners[i]}\n\n`;
+  });
+
+  copyText += 'Portions: ~8oz of protein per meal. Season however you like!';
+
+  html += `
+    <button class="btn-copy" onclick="copyPlan(\`${copyText.replace(/`/g, "'")}\`)">
+      📋 Copy to Send to Mom
+    </button>
+    <div class="copied-msg" id="copied">✓ Copied! Paste it into a text message.</div>
+    <p class="note">Tap generate again for a different plan</p>`;
+
+  plan.innerHTML = html;
+  window.scrollTo({ top: document.querySelector('#plan').offsetTop - 10, behavior: 'smooth' });
+}
+
+function copyPlan(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const msg = document.getElementById('copied');
+    if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 3000); }
+  }).catch(() => {
+    alert('Copy failed — screenshot the plan instead!');
+  });
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
+</script>
+</body>
+</html>
