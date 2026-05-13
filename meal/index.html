@@ -121,6 +121,26 @@
     letter-spacing: 0.3px;
   }
 
+  .swap-btn {
+    background: none;
+    border: 1px solid #444;
+    color: #888;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-top: 2px;
+    transition: all 0.15s;
+    display: block;
+  }
+
+  .swap-btn:active {
+    background: #333;
+    color: #E8720C;
+    border-color: #E8720C;
+  }
+
   .btn-copy {
     display: block;
     width: calc(100% - 32px);
@@ -168,7 +188,7 @@
 
 <script>
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-const WORK_DAYS = [0,1,2,3,4]; // Mon-Fri
+const WORK_DAYS = [0,1,2,3,4];
 
 const BREAKFAST = [
   'Scrambled eggs (x4) + turkey bacon + oatmeal + banana',
@@ -211,6 +231,9 @@ const WEEKEND_LUNCH = [
   'Grilled chicken + rice',
 ];
 
+// Store current plan so copy always reflects swaps
+let currentPlan = [];
+
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -222,6 +245,32 @@ function pickUnique(arr, count) {
   return result;
 }
 
+function swapMeal(dayIndex, mealType) {
+  const isWork = WORK_DAYS.includes(dayIndex);
+  let newMeal;
+
+  if (mealType === 'breakfast') {
+    newMeal = pick(BREAKFAST);
+    currentPlan[dayIndex].breakfast = newMeal;
+  } else if (mealType === 'lunch') {
+    newMeal = pick(isWork ? WORK_LUNCH : WEEKEND_LUNCH);
+    currentPlan[dayIndex].lunch = newMeal;
+  } else if (mealType === 'dinner') {
+    newMeal = pick(DINNER);
+    currentPlan[dayIndex].dinner = newMeal;
+  }
+
+  // Update just that meal text in the DOM
+  const el = document.getElementById(`meal-${dayIndex}-${mealType}`);
+  if (el) {
+    if (mealType === 'lunch' && isWork) {
+      el.innerHTML = newMeal + `<div class="lunch-sides">${WORK_SIDES}</div>`;
+    } else {
+      el.textContent = newMeal;
+    }
+  }
+}
+
 function generate() {
   const plan = document.getElementById('plan');
   plan.style.display = 'block';
@@ -229,55 +278,64 @@ function generate() {
   const breakfasts = pickUnique(BREAKFAST, 7);
   const dinners = pickUnique(DINNER, 7);
 
+  currentPlan = [];
   let html = '';
-  let copyText = "FINN'S MEAL PLAN FOR THE WEEK\n\n";
 
   DAYS.forEach((day, i) => {
     const isWork = WORK_DAYS.includes(i);
     const lunch = isWork ? pick(WORK_LUNCH) : pick(WEEKEND_LUNCH);
-    const lunchSides = isWork ? WORK_SIDES : '';
+
+    currentPlan.push({ breakfast: breakfasts[i], lunch, dinner: dinners[i], isWork });
 
     html += `
       <div class="day-card">
         <div class="day-header">${day}</div>
         <div class="meal-row">
           <span class="meal-label">Breakfast</span>
-          <span class="meal-text">${breakfasts[i]}</span>
+          <div style="flex:1">
+            <div class="meal-text" id="meal-${i}-breakfast">${breakfasts[i]}</div>
+            <button class="swap-btn" onclick="swapMeal(${i},'breakfast')">🔄 Swap</button>
+          </div>
         </div>
         <div class="meal-row">
           <span class="meal-label">Lunch${isWork ? '<span class="work-tag">work</span>' : ''}</span>
-          <span class="meal-text">
-            ${lunch}
-            ${lunchSides ? `<div class="lunch-sides">${lunchSides}</div>` : ''}
-          </span>
+          <div style="flex:1">
+            <div class="meal-text" id="meal-${i}-lunch">
+              ${lunch}${isWork ? `<div class="lunch-sides">${WORK_SIDES}</div>` : ''}
+            </div>
+            <button class="swap-btn" onclick="swapMeal(${i},'lunch')">🔄 Swap</button>
+          </div>
         </div>
         <div class="meal-row">
           <span class="meal-label">Dinner</span>
-          <span class="meal-text">${dinners[i]}</span>
+          <div style="flex:1">
+            <div class="meal-text" id="meal-${i}-dinner">${dinners[i]}</div>
+            <button class="swap-btn" onclick="swapMeal(${i},'dinner')">🔄 Swap</button>
+          </div>
         </div>
       </div>`;
-
-    copyText += `${day.toUpperCase()}\n`;
-    copyText += `  Breakfast: ${breakfasts[i]}\n`;
-    copyText += `  Lunch: ${lunch}\n`;
-    if (isWork) copyText += `  (Pack: yogurt cup + fruit + carrots)\n`;
-    copyText += `  Dinner: ${dinners[i]}\n\n`;
   });
 
-  copyText += 'Portions: ~8oz of protein per meal. Season however you like!';
-
   html += `
-    <button class="btn-copy" onclick="copyPlan(\`${copyText.replace(/`/g, "'")}\`)">
-      📋 Copy to Send to Mom
-    </button>
+    <button class="btn-copy" onclick="copyPlan()">📋 Copy to Send to Mom</button>
     <div class="copied-msg" id="copied">✓ Copied! Paste it into a text message.</div>
-    <p class="note">Tap generate again for a different plan</p>`;
+    <p class="note">Tap 🔄 Swap on any meal to replace it • Tap generate again for a new week</p>`;
 
   plan.innerHTML = html;
   window.scrollTo({ top: document.querySelector('#plan').offsetTop - 10, behavior: 'smooth' });
 }
 
-function copyPlan(text) {
+function copyPlan() {
+  let text = "FINN'S MEAL PLAN FOR THE WEEK\n\n";
+  currentPlan.forEach((day, i) => {
+    text += `${DAYS[i].toUpperCase()}\n`;
+    text += `  Breakfast: ${day.breakfast}\n`;
+    text += `  Lunch: ${day.lunch}\n`;
+    if (day.isWork) text += `  (Pack: yogurt cup + fruit + carrots)\n`;
+    text += `  Dinner: ${day.dinner}\n\n`;
+  });
+  text += 'Portions: ~8oz of protein per meal. Season however you like!';
+
   navigator.clipboard.writeText(text).then(() => {
     const msg = document.getElementById('copied');
     if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 3000); }
