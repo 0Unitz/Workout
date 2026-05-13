@@ -173,15 +173,22 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    gap: 8px;
   }
 
   .shop-title {
     font-size: 1rem;
     font-weight: 700;
     color: #E8720C;
+    flex: 1;
   }
 
-  .btn-clear {
+  .shop-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .btn-clear, .btn-copy-list {
     background: none;
     border: 1px solid #555;
     color: #888;
@@ -189,8 +196,10 @@
     padding: 4px 10px;
     border-radius: 6px;
     cursor: pointer;
+    white-space: nowrap;
   }
   .btn-clear:active { color: #e05555; border-color: #e05555; }
+  .btn-copy-list:active { color: #E8720C; border-color: #E8720C; }
 
   .shop-card {
     background: #252525;
@@ -240,6 +249,14 @@
     background: #2e2e2e;
     margin: 20px 16px 16px;
   }
+
+  .saved-badge {
+    text-align: center;
+    color: #555;
+    font-size: 0.72rem;
+    margin-top: 8px;
+    padding: 0 16px;
+  }
 </style>
 </head>
 <body>
@@ -257,7 +274,11 @@
   <div class="divider"></div>
   <div class="shop-header">
     <span class="shop-title">🛒 Shopping List</span>
-    <button class="btn-clear" onclick="clearList()">Clear all</button>
+    <div class="shop-actions">
+      <button class="btn-copy-list" onclick="copyList()">📋 Copy</button>
+      <button class="btn-clear" onclick="clearChecked()">Clear checked</button>
+      <button class="btn-clear" onclick="clearList()">Clear all</button>
+    </div>
   </div>
   <div class="shop-card" id="shop-list"></div>
 </div>
@@ -354,6 +375,75 @@ function pickUnique(arr, count) {
   return result;
 }
 
+// ── Plan persistence ──────────────────────────────────────
+function savePlan() {
+  localStorage.setItem('meal_plan', JSON.stringify(currentPlan));
+}
+
+function loadSavedPlan() {
+  try { return JSON.parse(localStorage.getItem('meal_plan') || 'null'); } catch { return null; }
+}
+
+// ── Render plan from currentPlan ─────────────────────────
+function renderPlan() {
+  const planEl = document.getElementById('plan');
+  planEl.style.display = 'block';
+
+  let html = '';
+
+  DAYS.forEach((day, i) => {
+    const { breakfast, lunch, dinner, isWork } = currentPlan[i];
+    html += `
+      <div class="day-card">
+        <div class="day-header">${day}</div>
+        <div class="meal-row">
+          <span class="meal-label">Breakfast</span>
+          <div style="flex:1">
+            <div class="meal-text" id="meal-${i}-breakfast">${breakfast.m}</div>
+            <div class="meal-actions">
+              <button class="swap-btn" onclick="swapMeal(${i},'breakfast')">🔄 Swap</button>
+              <button class="shop-btn" onclick="addToShop(${i},'breakfast')">🛒 Add ingredients</button>
+            </div>
+            <div class="added-flash" id="flash-${i}-breakfast"></div>
+          </div>
+        </div>
+        <div class="meal-row">
+          <span class="meal-label">Lunch${isWork ? '<span class="work-tag">work</span>' : ''}</span>
+          <div style="flex:1">
+            <div class="meal-text" id="meal-${i}-lunch">
+              ${lunch.m}${isWork ? `<div class="lunch-sides">${WORK_SIDES}</div>` : ''}
+            </div>
+            <div class="meal-actions">
+              <button class="swap-btn" onclick="swapMeal(${i},'lunch')">🔄 Swap</button>
+              <button class="shop-btn" onclick="addToShop(${i},'lunch')">🛒 Add ingredients</button>
+            </div>
+            <div class="added-flash" id="flash-${i}-lunch"></div>
+          </div>
+        </div>
+        <div class="meal-row">
+          <span class="meal-label">Dinner</span>
+          <div style="flex:1">
+            <div class="meal-text" id="meal-${i}-dinner">${dinner.m}</div>
+            <div class="meal-actions">
+              <button class="swap-btn" onclick="swapMeal(${i},'dinner')">🔄 Swap</button>
+              <button class="shop-btn" onclick="addToShop(${i},'dinner')">🛒 Add ingredients</button>
+            </div>
+            <div class="added-flash" id="flash-${i}-dinner"></div>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  html += `
+    <button class="btn-copy" onclick="copyPlan()">📋 Copy meal plan</button>
+    <div class="copied-msg" id="copied">✓ Copied! Paste it into a text message.</div>
+    <p class="note">🔄 Swap any meal • 🛒 Add ingredients to shopping list</p>
+    <p class="saved-badge">Plan saved — will be here when you come back</p>`;
+
+  planEl.innerHTML = html;
+  renderShopList();
+}
+
 function swapMeal(dayIndex, mealType) {
   const isWork = WORK_DAYS.includes(dayIndex);
   let picked;
@@ -362,6 +452,7 @@ function swapMeal(dayIndex, mealType) {
   else picked = pick(DINNER);
 
   currentPlan[dayIndex][mealType] = picked;
+  savePlan();
 
   const el = document.getElementById(`meal-${dayIndex}-${mealType}`);
   if (el) {
@@ -397,68 +488,18 @@ function addToShop(dayIndex, mealType) {
 }
 
 function generate() {
-  const plan = document.getElementById('plan');
-  plan.style.display = 'block';
-
   const breakfasts = pickUnique(BREAKFAST, 7);
   const dinners = pickUnique(DINNER, 7);
   currentPlan = [];
-
-  let html = '';
 
   DAYS.forEach((day, i) => {
     const isWork = WORK_DAYS.includes(i);
     const lunch = pick(isWork ? WORK_LUNCH : WEEKEND_LUNCH);
     currentPlan.push({ breakfast: breakfasts[i], lunch, dinner: dinners[i], isWork });
-
-    html += `
-      <div class="day-card">
-        <div class="day-header">${day}</div>
-        <div class="meal-row">
-          <span class="meal-label">Breakfast</span>
-          <div style="flex:1">
-            <div class="meal-text" id="meal-${i}-breakfast">${breakfasts[i].m}</div>
-            <div class="meal-actions">
-              <button class="swap-btn" onclick="swapMeal(${i},'breakfast')">🔄 Swap</button>
-              <button class="shop-btn" onclick="addToShop(${i},'breakfast')">🛒 Add ingredients</button>
-            </div>
-            <div class="added-flash" id="flash-${i}-breakfast"></div>
-          </div>
-        </div>
-        <div class="meal-row">
-          <span class="meal-label">Lunch${isWork ? '<span class="work-tag">work</span>' : ''}</span>
-          <div style="flex:1">
-            <div class="meal-text" id="meal-${i}-lunch">
-              ${lunch.m}${isWork ? `<div class="lunch-sides">${WORK_SIDES}</div>` : ''}
-            </div>
-            <div class="meal-actions">
-              <button class="swap-btn" onclick="swapMeal(${i},'lunch')">🔄 Swap</button>
-              <button class="shop-btn" onclick="addToShop(${i},'lunch')">🛒 Add ingredients</button>
-            </div>
-            <div class="added-flash" id="flash-${i}-lunch"></div>
-          </div>
-        </div>
-        <div class="meal-row">
-          <span class="meal-label">Dinner</span>
-          <div style="flex:1">
-            <div class="meal-text" id="meal-${i}-dinner">${dinners[i].m}</div>
-            <div class="meal-actions">
-              <button class="swap-btn" onclick="swapMeal(${i},'dinner')">🔄 Swap</button>
-              <button class="shop-btn" onclick="addToShop(${i},'dinner')">🛒 Add ingredients</button>
-            </div>
-            <div class="added-flash" id="flash-${i}-dinner"></div>
-          </div>
-        </div>
-      </div>`;
   });
 
-  html += `
-    <button class="btn-copy" onclick="copyPlan()">📋 Copy</button>
-    <div class="copied-msg" id="copied">✓ Copied! Paste it into a text message.</div>
-    <p class="note">🔄 Swap any meal • 🛒 Add ingredients to shopping list</p>`;
-
-  plan.innerHTML = html;
-  renderShopList();
+  savePlan();
+  renderPlan();
   window.scrollTo({ top: document.querySelector('#plan').offsetTop - 10, behavior: 'smooth' });
 }
 
@@ -479,7 +520,7 @@ function copyPlan() {
   }).catch(() => alert('Copy failed — screenshot the plan instead!'));
 }
 
-// Shopping list
+// ── Shopping list ─────────────────────────────────────────
 function getList() {
   try { return JSON.parse(localStorage.getItem('meal_shop') || '[]'); } catch { return []; }
 }
@@ -495,9 +536,36 @@ function toggleItem(index) {
   renderShopList();
 }
 
+function clearChecked() {
+  const list = getList().filter(item => !item.checked);
+  saveList(list);
+  renderShopList();
+}
+
 function clearList() {
   saveList([]);
   renderShopList();
+}
+
+function copyList() {
+  const list = getList();
+  if (list.length === 0) return;
+  const unchecked = list.filter(i => !i.checked);
+  const checked = list.filter(i => i.checked);
+  let text = 'GROCERY LIST\n\n';
+  unchecked.forEach(i => text += `• ${i.name}\n`);
+  if (checked.length > 0) {
+    text += `\n(Already have)\n`;
+    checked.forEach(i => text += `✓ ${i.name}\n`);
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-copy-list');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    }
+  }).catch(() => alert('Copy failed — screenshot the list instead!'));
 }
 
 function renderShopList() {
@@ -523,7 +591,12 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js');
 }
 
-// Load shopping list on start
+// ── On load: restore saved plan + shopping list ───────────
+const saved = loadSavedPlan();
+if (saved && saved.length === 7) {
+  currentPlan = saved;
+  renderPlan();
+}
 renderShopList();
 </script>
 </body>
