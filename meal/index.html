@@ -263,7 +263,7 @@
 
 <header>
   <h1>🍽 Finn's Meal Planner</h1>
-  <p>Tap generate to get this week's meals</p>
+  <p>Low carb · High protein · Heart healthy</p>
 </header>
 
 <button class="btn-generate" onclick="generate()">Generate This Week's Meals</button>
@@ -288,17 +288,17 @@ const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sun
 const WORK_DAYS = [0,1,2,3,4];
 
 const BREAKFAST = [
-  { m: 'Scrambled eggs (x4) + turkey bacon + oatmeal + banana', i: ['Eggs','Turkey bacon','Oatmeal','Bananas'] },
-  { m: 'Eggs any style + toast + fruit', i: ['Eggs','Bread','Fruit'] },
-  { m: 'Egg & cheese sandwich on toast + fruit', i: ['Eggs','Cheese','Bread','Fruit'] },
-  { m: 'French toast + turkey bacon + fruit — drizzle honey, dip in Greek yogurt instead of syrup', i: ['Eggs','Bread','Turkey bacon','Fruit','Honey','Greek yogurt'] },
-  { m: 'Smoked salmon + scrambled eggs + toast', i: ['Smoked salmon','Eggs','Bread'] },
-  { m: 'Protein pancakes + turkey bacon', i: ['Pancake mix','Eggs','Turkey bacon'] },
+  { m: 'Scrambled eggs (x4) + turkey bacon + avocado', i: ['Eggs','Turkey bacon','Avocados'] },
+  { m: 'Eggs any style + turkey bacon + berries on the side', i: ['Eggs','Turkey bacon','Berries'] },
+  { m: 'Egg & cheese sandwich on 1 slice toast + fruit', i: ['Eggs','Cheese','Bread','Fruit'] },
+  { m: 'Smoked salmon + scrambled eggs + avocado', i: ['Smoked salmon','Eggs','Avocados'] },
+  { m: 'Veggie scramble: eggs + spinach + bell peppers + cheese', i: ['Eggs','Spinach','Bell peppers','Cheese'] },
   { m: 'Breakfast burrito: eggs + cheese + turkey bacon in tortilla', i: ['Eggs','Cheese','Turkey bacon','Flour tortillas'] },
-  { m: 'Bagel + cream cheese + smoked salmon', i: ['Bagels','Cream cheese','Smoked salmon'] },
-  { m: 'Yogurt parfait: Greek yogurt + granola + fruit layered', i: ['Greek yogurt','Granola','Fruit'] },
-  { m: 'Chocolate parfait: Greek yogurt + cocoa powder + honey + granola + banana layered', i: ['Greek yogurt','Cocoa powder','Honey','Granola','Bananas'] },
-  { m: 'Tropical parfait: Greek yogurt + pineapple + granola + honey + coconut flakes', i: ['Greek yogurt','Pineapple','Granola','Honey','Coconut flakes'] },
+  { m: 'Hard boiled eggs (x3) + turkey bacon + berries', i: ['Eggs','Turkey bacon','Berries'] },
+  { m: 'Greek yogurt (plain) + mixed nuts + berries — no granola', i: ['Greek yogurt','Mixed nuts','Berries'] },
+  { m: 'Smoked salmon + cream cheese + cucumber slices on 1 slice rye', i: ['Smoked salmon','Cream cheese','Cucumber','Rye bread'] },
+  { m: 'Egg white omelette: egg whites + cheese + spinach + turkey', i: ['Eggs','Cheese','Spinach','Deli turkey'] },
+  { m: 'Sardines or tuna on 1 slice toast + sliced tomato', i: ['Canned sardines','Bread','Tomato'] },
 ];
 
 const WORK_LUNCH = [
@@ -322,58 +322,48 @@ const WORK_LUNCH = [
   { m: 'Pepperoni + cheese + crackers — mini lunchable style', i: ['Pepperoni','Cheese','Crackers'] },
   { m: 'Chicken strip wrap: chicken tenders + honey mustard or mayo in tortilla', i: ['Chicken tenders','Honey mustard','Mayo','Flour tortillas'] },
   { m: 'Egg salad sandwich: hard boiled eggs + mayo on bread', i: ['Eggs','Mayo','Bread'] },
-  { m: 'PB&J sandwich', i: ['Bread','Peanut butter','Jelly'] },
+  { m: 'Cucumber + cream cheese + smoked salmon roll-ups', i: ['Cucumber','Cream cheese','Smoked salmon'] },
 ];
 
-const WORK_SIDES = 'Sides: yogurt cup + fruit (grapes/blueberries/apple) + carrots + hard boiled egg + trail mix';
+const WORK_SIDES = 'Sides: Greek yogurt (plain) + berries + carrots + celery + hard boiled egg + mixed nuts';
 
 const DINNER = [
-  { m: 'Steak + white rice', i: ['Steak','White rice'] },
-  { m: 'Baked salmon + white rice', i: ['Salmon','White rice'] },
-  { m: 'Ground beef stir fry over rice', i: ['Ground beef','White rice','Soy sauce'] },
-  { m: 'Penne with ground beef meat sauce', i: ['Ground beef','Penne pasta','Pasta sauce'] },
-  { m: 'Teriyaki chicken over rice', i: ['Chicken breast','White rice','Teriyaki sauce'] },
-  { m: 'Grilled shrimp + pasta', i: ['Shrimp','Pasta','Butter'] },
-  { m: 'Baked chicken thighs + white rice', i: ['Chicken thighs','White rice'] },
-  { m: 'Homemade burgers + cheese', i: ['Ground beef','Burger buns','Cheese'] },
-  { m: 'Nachos: ground beef + cheese + sour cream + salsa + baked chips', i: ['Ground beef','Tortilla chips','Cheese','Sour cream','Salsa'] },
-  { m: 'Grilled salmon + pasta', i: ['Salmon','Pasta','Butter'] },
-  { m: 'BBQ ribs + white rice', i: ['Pork ribs','BBQ sauce','White rice'] },
-  { m: 'Chicken alfredo pasta', i: ['Chicken breast','Pasta','Alfredo sauce','Parmesan cheese'] },
-  { m: 'Beef tacos: ground beef + cheese + sour cream + taco shells', i: ['Ground beef','Taco shells','Cheese','Sour cream'] },
-  { m: 'Shrimp alfredo', i: ['Shrimp','Pasta','Alfredo sauce','Parmesan cheese'] },
-  { m: 'Chicken parmesan + pasta', i: ['Chicken breast','Pasta sauce','Pasta','Mozzarella cheese','Bread crumbs'] },
-  { m: 'Smash burgers + baked fries', i: ['Ground beef','Burger buns','Cheese','Potatoes'] },
-  { m: 'Honey garlic chicken + rice', i: ['Chicken breast','White rice','Honey','Garlic'] },
-  { m: 'Beef stir fry over rice', i: ['Beef','White rice','Soy sauce'] },
-  { m: 'Chicken fajitas: chicken + cheese + sour cream + tortillas', i: ['Chicken breast','Cheese','Sour cream','Flour tortillas','Fajita seasoning'] },
-  { m: 'Loaded potato: baked potato + sour cream + cheese + bacon + chili', i: ['Potatoes','Sour cream','Cheese','Bacon','Canned chili'] },
-  { m: 'Mac and cheese + ground beef mixed in', i: ['Mac and cheese','Ground beef'] },
-  { m: 'Baked fish + baked fries', i: ['White fish fillets','Potatoes','Butter'] },
-  { m: 'Chicken wings + white rice', i: ['Chicken wings','White rice','Wing sauce'] },
-  { m: 'Breakfast for dinner: eggs + bacon + pancakes', i: ['Eggs','Bacon','Pancake mix'] },
-  { m: 'Chicken fried rice: chicken + rice + eggs + soy sauce — one pan', i: ['Chicken breast','White rice','Eggs','Soy sauce','Butter'] },
-  { m: 'Garlic butter shrimp + pasta', i: ['Shrimp','Pasta','Butter','Garlic'] },
-  { m: 'Honey sriracha chicken + rice — bake with honey + sriracha glaze', i: ['Chicken breast','White rice','Honey','Sriracha'] },
+  { m: 'Steak + roasted broccoli + cauliflower rice', i: ['Steak','Broccoli','Cauliflower'] },
+  { m: 'Baked salmon + asparagus + cauliflower rice', i: ['Salmon','Asparagus','Cauliflower'] },
+  { m: 'Ground beef stir fry over cauliflower rice — soy sauce, garlic, peppers', i: ['Ground beef','Cauliflower','Soy sauce','Bell peppers','Garlic'] },
+  { m: 'Teriyaki chicken + steamed broccoli + cauliflower rice', i: ['Chicken breast','Cauliflower','Broccoli','Teriyaki sauce'] },
+  { m: 'Garlic butter shrimp + zucchini noodles or cauliflower rice', i: ['Shrimp','Zucchini','Butter','Garlic'] },
+  { m: 'Baked chicken thighs + green beans + cauliflower rice', i: ['Chicken thighs','Green beans','Cauliflower'] },
+  { m: 'Homemade burgers (lettuce wrap or 1 bun) + side salad', i: ['Ground beef','Lettuce','Cheese','Tomato'] },
+  { m: 'Lemon butter salmon + roasted asparagus', i: ['Salmon','Asparagus','Butter','Lemon'] },
+  { m: 'Beef tacos: ground beef + cheese + sour cream + corn tortillas (2 max)', i: ['Ground beef','Corn tortillas','Cheese','Sour cream'] },
+  { m: 'Smash burgers (no fries) + side salad or roasted veggies', i: ['Ground beef','Burger buns','Cheese','Lettuce','Tomato'] },
+  { m: 'Garlic chicken + roasted Brussels sprouts + cauliflower rice', i: ['Chicken breast','Brussels sprouts','Cauliflower','Garlic'] },
+  { m: 'Beef stir fry + cauliflower rice — soy sauce, sesame, veggies', i: ['Beef','Cauliflower','Soy sauce','Bell peppers'] },
+  { m: 'Chicken fajita bowl: chicken + peppers + onion + cheese + sour cream — no tortilla', i: ['Chicken breast','Bell peppers','Onion','Cheese','Sour cream','Fajita seasoning'] },
+  { m: 'Baked fish + roasted green beans + cauliflower rice', i: ['White fish fillets','Green beans','Cauliflower','Butter'] },
+  { m: 'Chicken wings (baked) + celery + side salad', i: ['Chicken wings','Celery'] },
+  { m: 'Breakfast for dinner: eggs + turkey bacon + avocado', i: ['Eggs','Turkey bacon','Avocados'] },
   { m: 'Ground beef chili — beef + beans + tomato + seasoning, batch cook friendly', i: ['Ground beef','Canned beans','Canned tomatoes','Chili seasoning'] },
-  { m: 'Lemon butter salmon + white rice', i: ['Salmon','White rice','Butter','Lemon'] },
-  { m: 'Baked coconut shrimp + white rice', i: ['Shrimp','Coconut flakes','White rice','Butter'] },
-  { m: 'Coconut milk chicken + rice — chicken simmered in coconut milk with seasoning', i: ['Chicken breast','Coconut milk','White rice'] },
-  { m: 'Honey glazed salmon + white rice', i: ['Salmon','White rice','Honey','Soy sauce'] },
+  { m: 'Pan seared salmon + spinach sauteed in garlic butter', i: ['Salmon','Spinach','Butter','Garlic'] },
+  { m: 'Coconut milk chicken + cauliflower rice — simmer chicken in coconut milk with seasoning', i: ['Chicken breast','Coconut milk','Cauliflower'] },
+  { m: 'Shrimp + roasted broccoli + cauliflower rice — garlic butter', i: ['Shrimp','Broccoli','Cauliflower','Butter','Garlic'] },
+  { m: 'Stuffed peppers: ground beef + cheese + tomato sauce inside bell peppers', i: ['Ground beef','Bell peppers','Cheese','Pasta sauce'] },
+  { m: 'Tuna steaks seared in butter + roasted asparagus', i: ['Tuna steaks','Asparagus','Butter','Lemon'] },
+  { m: 'Chicken thighs braised in tomato + olives + garlic — Mediterranean style', i: ['Chicken thighs','Canned tomatoes','Olives','Garlic'] },
 ];
 
 const WEEKEND_LUNCH = [
-  { m: 'Homemade burgers + cheese', i: ['Ground beef','Burger buns','Cheese'] },
-  { m: 'Nachos: ground beef + cheese + sour cream + salsa', i: ['Ground beef','Tortilla chips','Cheese','Sour cream','Salsa'] },
-  { m: 'Ground beef stir fry over rice', i: ['Ground beef','White rice','Soy sauce'] },
-  { m: 'Chicken and rice — whatever seasoning you like', i: ['Chicken breast','White rice'] },
-  { m: 'Taco bowl: ground beef + rice + cheese + sour cream', i: ['Ground beef','White rice','Cheese','Sour cream'] },
-  { m: 'Grilled chicken + rice', i: ['Chicken breast','White rice'] },
-  { m: 'Beef tacos: ground beef + cheese + sour cream + taco shells', i: ['Ground beef','Taco shells','Cheese','Sour cream'] },
-  { m: 'BBQ chicken + rice', i: ['Chicken breast','BBQ sauce','White rice'] },
-  { m: 'Quesadillas: chicken or beef + cheese', i: ['Chicken breast','Cheese','Flour tortillas'] },
-  { m: 'Tuna salad sandwich: canned tuna + mayo + seasoning on bread', i: ['Canned tuna','Mayo','Bread'] },
-  { m: 'Chicken rice bowl: chicken + rice + cheese + sour cream + BBQ or honey mustard', i: ['Chicken breast','White rice','Cheese','Sour cream','BBQ sauce'] },
+  { m: 'Homemade burgers + cheese + side salad (no fries)', i: ['Ground beef','Burger buns','Cheese','Lettuce','Tomato'] },
+  { m: 'Ground beef stir fry over cauliflower rice', i: ['Ground beef','Cauliflower','Soy sauce','Bell peppers'] },
+  { m: 'Grilled chicken + roasted veggies', i: ['Chicken breast','Broccoli','Bell peppers'] },
+  { m: 'Taco bowl: ground beef + cheese + sour cream — cauliflower rice, no chips', i: ['Ground beef','Cauliflower','Cheese','Sour cream'] },
+  { m: 'Beef tacos: ground beef + cheese + sour cream + corn tortillas (2 max)', i: ['Ground beef','Corn tortillas','Cheese','Sour cream'] },
+  { m: 'Grilled chicken thighs + green beans', i: ['Chicken thighs','Green beans','Garlic'] },
+  { m: 'Tuna salad on 1 slice toast or lettuce wraps', i: ['Canned tuna','Mayo','Lettuce','Bread'] },
+  { m: 'Quesadillas: chicken + cheese (1 tortilla, keep it small) + side salad', i: ['Chicken breast','Cheese','Flour tortillas','Lettuce'] },
+  { m: 'Chicken bowl: chicken + cauliflower rice + cheese + sour cream', i: ['Chicken breast','Cauliflower','Cheese','Sour cream'] },
+  { m: 'Salmon + cucumber salad with olive oil + dill', i: ['Salmon','Cucumber','Olive oil'] },
 ];
 
 let currentPlan = [];
@@ -524,7 +514,7 @@ function copyPlan() {
     if (day.isWork) text += `  (Pack: yogurt cup + fruit + carrots + hard boiled egg)\n`;
     text += `  Dinner: ${day.dinner.m}\n\n`;
   });
-  text += 'Portions: ~8oz of protein per meal. Season however you like!';
+  text += 'Portions: ~8oz of protein per meal. Low carb — swap white rice for cauliflower rice. Season however you like!';
 
   navigator.clipboard.writeText(text).then(() => {
     const msg = document.getElementById('copied');
