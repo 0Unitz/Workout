@@ -290,7 +290,7 @@ const WORK_DAYS = [0,1,2,3,4];
 const BREAKFAST = [
   { m: 'Scrambled eggs (x4) + turkey bacon + avocado', i: ['Eggs','Turkey bacon','Avocados'] },
   { m: 'Eggs any style + turkey bacon + berries on the side', i: ['Eggs','Turkey bacon','Berries'] },
-  { m: 'Egg & cheese sandwich on 1 slice toast + fruit', i: ['Eggs','Cheese','Bread','Fruit'] },
+  { m: 'Egg & cheese sandwich on 1 slice toast + berries', i: ['Eggs','Cheese','Bread','Berries'] },
   { m: 'Smoked salmon + scrambled eggs + avocado', i: ['Smoked salmon','Eggs','Avocados'] },
   { m: 'Veggie scramble: eggs + spinach + bell peppers + cheese', i: ['Eggs','Spinach','Bell peppers','Cheese'] },
   { m: 'Breakfast burrito: eggs + cheese + turkey bacon in tortilla', i: ['Eggs','Cheese','Turkey bacon','Flour tortillas'] },
@@ -299,30 +299,34 @@ const BREAKFAST = [
   { m: 'Smoked salmon + cream cheese + cucumber slices on 1 slice rye', i: ['Smoked salmon','Cream cheese','Cucumber','Rye bread'] },
   { m: 'Egg white omelette: egg whites + cheese + spinach + turkey', i: ['Eggs','Cheese','Spinach','Deli turkey'] },
   { m: 'Sardines or tuna on 1 slice toast + sliced tomato', i: ['Canned sardines','Bread','Tomato'] },
+  { m: 'Cottage cheese + walnuts + berries', i: ['Cottage cheese','Walnuts','Berries'] },
+  { m: 'Shakshuka: eggs poached in tomato sauce + peppers + spices', i: ['Eggs','Canned tomatoes','Bell peppers'] },
+  { m: 'Turkey sausage + eggs + sauteed mushrooms', i: ['Turkey sausage','Eggs','Mushrooms'] },
+  { m: 'Ham egg cups: ham slices in muffin tin + egg cracked in + baked with cheese', i: ['Sliced ham','Eggs','Cheese'] },
+  { m: 'Avocado + 2 fried eggs + hot sauce on 1 slice toast', i: ['Avocados','Eggs','Bread'] },
 ];
 
 const WORK_LUNCH = [
   { m: 'Grilled chicken breast (~8oz) — cold is fine', i: ['Chicken breast'] },
-  { m: 'Hamburger patty — pack with bun or wrap', i: ['Ground beef','Burger buns'] },
-  { m: 'Pinwheel wrap: chicken + cheese + honey mustard or mayo — slice into rounds', i: ['Chicken breast','Cheese','Honey mustard','Mayo','Flour tortillas'] },
-  { m: 'Pinwheel wrap: turkey + cheese + honey mustard or mayo — slice into rounds', i: ['Deli turkey','Cheese','Honey mustard','Mayo','Flour tortillas'] },
-  { m: 'Pinwheel wrap: chicken salad (shredded chicken + mayo) + cheese — slice into rounds', i: ['Chicken breast','Mayo','Cheese','Flour tortillas'] },
-  { m: 'Nachos container: baked chips + seasoned ground beef + cheese + sour cream', i: ['Tortilla chips','Ground beef','Cheese','Sour cream'] },
-  { m: 'Chicken sandwich: grilled chicken + cheese + honey mustard or mayo on a roll', i: ['Chicken breast','Cheese','Honey mustard','Mayo','Hoagie rolls'] },
-  { m: 'Turkey club: turkey + cheese + bacon + mayo on toasted bread', i: ['Deli turkey','Cheese','Bacon','Mayo','Bread'] },
-  { m: 'Steak sandwich: thin sliced steak + cheese + honey mustard or mayo on hoagie', i: ['Steak','Cheese','Honey mustard','Mayo','Hoagie rolls'] },
-  { m: 'BLT: bacon + tomato + mayo on toasted bread', i: ['Bacon','Tomato','Mayo','Bread'] },
-  { m: 'Grilled cheese + deli turkey on the side', i: ['Bread','Cheese','Butter','Deli turkey'] },
+  { m: 'Hamburger patty — pack with 1 bun or lettuce wrap', i: ['Ground beef','Burger buns','Lettuce'] },
+  { m: 'Pinwheel wrap: chicken + cheese + mayo — slice into rounds', i: ['Chicken breast','Cheese','Mayo','Flour tortillas'] },
+  { m: 'Pinwheel wrap: turkey + cheese + mayo — slice into rounds', i: ['Deli turkey','Cheese','Mayo','Flour tortillas'] },
+  { m: 'Pinwheel wrap: chicken salad (shredded chicken + mayo) + cheese', i: ['Chicken breast','Mayo','Cheese','Flour tortillas'] },
+  { m: 'Chicken sandwich: grilled chicken + cheese + mayo on a roll', i: ['Chicken breast','Cheese','Mayo','Hoagie rolls'] },
+  { m: 'Turkey club: turkey + cheese + turkey bacon + mayo on toasted bread', i: ['Deli turkey','Cheese','Turkey bacon','Mayo','Bread'] },
+  { m: 'Steak sandwich: thin sliced steak + cheese + mayo on hoagie', i: ['Steak','Cheese','Mayo','Hoagie rolls'] },
+  { m: 'BLT: turkey bacon + tomato + mayo on toasted bread', i: ['Turkey bacon','Tomato','Mayo','Bread'] },
   { m: 'Chicken quesadilla — slice into wedges, cold is fine', i: ['Chicken breast','Cheese','Flour tortillas'] },
-  { m: 'Tuna melt sandwich: tuna + mayo + cheese on toasted bread', i: ['Canned tuna','Mayo','Cheese','Bread'] },
-  { m: 'BBQ chicken sandwich: grilled chicken + BBQ sauce + cheese on a roll', i: ['Chicken breast','BBQ sauce','Cheese','Burger buns'] },
+  { m: 'Tuna salad on 1 slice bread or lettuce wraps', i: ['Canned tuna','Mayo','Bread','Lettuce'] },
   { m: 'Chicken caesar wrap: chicken + cheese + caesar dressing in tortilla', i: ['Chicken breast','Cheese','Caesar dressing','Flour tortillas'] },
-  { m: 'Crackers + cheese + sliced ham + honey drizzle — pack in a container', i: ['Crackers','Cheese','Sliced ham','Honey'] },
-  { m: 'Ham and cheese croissant', i: ['Croissants','Sliced ham','Cheese'] },
-  { m: 'Pepperoni + cheese + crackers — mini lunchable style', i: ['Pepperoni','Cheese','Crackers'] },
-  { m: 'Chicken strip wrap: chicken tenders + honey mustard or mayo in tortilla', i: ['Chicken tenders','Honey mustard','Mayo','Flour tortillas'] },
-  { m: 'Egg salad sandwich: hard boiled eggs + mayo on bread', i: ['Eggs','Mayo','Bread'] },
+  { m: 'Pepperoni + cheese + celery sticks — pack in container', i: ['Pepperoni','Cheese','Celery'] },
+  { m: 'Chicken strip wrap: chicken tenders + mayo in tortilla', i: ['Chicken tenders','Mayo','Flour tortillas'] },
+  { m: 'Egg salad on 1 slice bread or lettuce cups', i: ['Eggs','Mayo','Bread','Lettuce'] },
   { m: 'Cucumber + cream cheese + smoked salmon roll-ups', i: ['Cucumber','Cream cheese','Smoked salmon'] },
+  { m: 'Turkey lettuce wraps: deli turkey + avocado + cheese + mustard in romaine', i: ['Deli turkey','Avocados','Cheese','Mustard','Romaine lettuce'] },
+  { m: 'Hard boiled eggs (x4) + turkey slices + celery', i: ['Eggs','Deli turkey','Celery'] },
+  { m: 'Chicken salad lettuce cups: shredded chicken + mayo + celery in romaine', i: ['Chicken breast','Mayo','Celery','Romaine lettuce'] },
+  { m: 'Sardine or tuna tin + cheese + celery sticks', i: ['Canned sardines','Cheese','Celery'] },
 ];
 
 const WORK_SIDES = 'Sides: Greek yogurt (plain) + berries + carrots + celery + hard boiled egg + mixed nuts';
@@ -351,6 +355,13 @@ const DINNER = [
   { m: 'Stuffed peppers: ground beef + cheese + tomato sauce inside bell peppers', i: ['Ground beef','Bell peppers','Cheese','Pasta sauce'] },
   { m: 'Tuna steaks seared in butter + roasted asparagus', i: ['Tuna steaks','Asparagus','Butter','Lemon'] },
   { m: 'Chicken thighs braised in tomato + olives + garlic — Mediterranean style', i: ['Chicken thighs','Canned tomatoes','Olives','Garlic'] },
+  { m: 'Ground turkey meatballs + zucchini noodles + tomato sauce', i: ['Ground turkey','Zucchini','Pasta sauce'] },
+  { m: 'Pork tenderloin + roasted cauliflower + green beans', i: ['Pork tenderloin','Cauliflower','Green beans'] },
+  { m: 'Baked tilapia + roasted broccoli + cauliflower rice', i: ['Tilapia','Broccoli','Cauliflower','Butter'] },
+  { m: 'Chicken soup: chicken + broth + celery + carrots + onion — batch cook friendly', i: ['Chicken breast','Chicken broth','Celery','Carrots','Onion'] },
+  { m: 'Seared tuna + avocado slices + cucumber — no carbs needed', i: ['Tuna steaks','Avocados','Cucumber','Soy sauce'] },
+  { m: 'Salmon patties (canned salmon + egg + seasoning, pan fried) + side salad', i: ['Canned salmon','Eggs','Romaine lettuce','Tomato'] },
+  { m: 'Chicken thighs + roasted zucchini + mushrooms in garlic butter', i: ['Chicken thighs','Zucchini','Mushrooms','Butter','Garlic'] },
 ];
 
 const WEEKEND_LUNCH = [
@@ -360,10 +371,14 @@ const WEEKEND_LUNCH = [
   { m: 'Taco bowl: ground beef + cheese + sour cream — cauliflower rice, no chips', i: ['Ground beef','Cauliflower','Cheese','Sour cream'] },
   { m: 'Beef tacos: ground beef + cheese + sour cream + corn tortillas (2 max)', i: ['Ground beef','Corn tortillas','Cheese','Sour cream'] },
   { m: 'Grilled chicken thighs + green beans', i: ['Chicken thighs','Green beans','Garlic'] },
-  { m: 'Tuna salad on 1 slice toast or lettuce wraps', i: ['Canned tuna','Mayo','Lettuce','Bread'] },
-  { m: 'Quesadillas: chicken + cheese (1 tortilla, keep it small) + side salad', i: ['Chicken breast','Cheese','Flour tortillas','Lettuce'] },
+  { m: 'Tuna salad lettuce wraps or on 1 slice toast', i: ['Canned tuna','Mayo','Lettuce','Bread'] },
+  { m: 'Quesadilla: chicken + cheese (1 tortilla) + side salad', i: ['Chicken breast','Cheese','Flour tortillas','Lettuce'] },
   { m: 'Chicken bowl: chicken + cauliflower rice + cheese + sour cream', i: ['Chicken breast','Cauliflower','Cheese','Sour cream'] },
   { m: 'Salmon + cucumber salad with olive oil + dill', i: ['Salmon','Cucumber','Olive oil'] },
+  { m: 'Avocado + tuna smash bowl: tuna + avocado + lime + salt — eat with a fork', i: ['Canned tuna','Avocados','Lime'] },
+  { m: 'Turkey lettuce wraps: deli turkey + avocado + cheese rolled in romaine', i: ['Deli turkey','Avocados','Cheese','Romaine lettuce'] },
+  { m: 'Egg salad lettuce cups: hard boiled eggs + mayo + celery in romaine', i: ['Eggs','Mayo','Celery','Romaine lettuce'] },
+  { m: 'Smoked salmon + avocado + cucumber plate — no bread needed', i: ['Smoked salmon','Avocados','Cucumber','Cream cheese'] },
 ];
 
 let currentPlan = [];
@@ -492,11 +507,14 @@ function addToShop(dayIndex, mealType) {
 function generate() {
   const breakfasts = pickUnique(BREAKFAST, 7);
   const dinners = pickUnique(DINNER, 7);
+  const workLunches = pickUnique(WORK_LUNCH, 5);
+  const weekendLunches = pickUnique(WEEKEND_LUNCH, 2);
   currentPlan = [];
+  let workIdx = 0, weekendIdx = 0;
 
   DAYS.forEach((day, i) => {
     const isWork = WORK_DAYS.includes(i);
-    const lunch = pick(isWork ? WORK_LUNCH : WEEKEND_LUNCH);
+    const lunch = isWork ? workLunches[workIdx++] : weekendLunches[weekendIdx++];
     currentPlan.push({ breakfast: breakfasts[i], lunch, dinner: dinners[i], isWork });
   });
 

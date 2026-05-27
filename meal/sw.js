@@ -1,4 +1,4 @@
-const CACHE = 'meal-v13';
+const CACHE = 'meal-v14';
 const ASSETS = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
