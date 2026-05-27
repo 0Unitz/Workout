@@ -122,6 +122,8 @@
   }
   .swap-btn:active { background: #333; color: #E8720C; border-color: #E8720C; }
   .shop-btn:active { background: #333; color: #5cb85c; border-color: #5cb85c; }
+  .yt-btn { background: none; border: 1px solid #444; color: #888; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.15s; }
+  .yt-btn:active { background: #333; color: #ff4444; border-color: #ff4444; }
 
   .added-flash {
     font-size: 0.7rem;
@@ -419,6 +421,7 @@ function renderPlan() {
             <div class="meal-actions">
               <button class="swap-btn" onclick="swapMeal(${i},'breakfast')">🔄 Swap</button>
               <button class="shop-btn" onclick="addToShop(${i},'breakfast')">🛒 Add ingredients</button>
+              <a class="yt-btn" href="https://www.youtube.com/results?search_query=how+to+make+${encodeURIComponent(breakfast.m.split('—')[0].split(':')[0].trim())}" target="_blank">▶ How to make</a>
             </div>
             <div class="added-flash" id="flash-${i}-breakfast"></div>
           </div>
@@ -432,6 +435,7 @@ function renderPlan() {
             <div class="meal-actions">
               <button class="swap-btn" onclick="swapMeal(${i},'lunch')">🔄 Swap</button>
               <button class="shop-btn" onclick="addToShop(${i},'lunch')">🛒 Add ingredients</button>
+              <a class="yt-btn" href="https://www.youtube.com/results?search_query=how+to+make+${encodeURIComponent(lunch.m.split('—')[0].split(':')[0].trim())}" target="_blank">▶ How to make</a>
             </div>
             <div class="added-flash" id="flash-${i}-lunch"></div>
           </div>
@@ -443,6 +447,7 @@ function renderPlan() {
             <div class="meal-actions">
               <button class="swap-btn" onclick="swapMeal(${i},'dinner')">🔄 Swap</button>
               <button class="shop-btn" onclick="addToShop(${i},'dinner')">🛒 Add ingredients</button>
+              <a class="yt-btn" href="https://www.youtube.com/results?search_query=how+to+make+${encodeURIComponent(dinner.m.split('—')[0].split(':')[0].trim())}" target="_blank">▶ How to make</a>
             </div>
             <div class="added-flash" id="flash-${i}-dinner"></div>
           </div>
