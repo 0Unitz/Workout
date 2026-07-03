@@ -838,8 +838,6 @@ label.field-lbl{display:block;font-family:var(--font-m);font-size:9px;color:var(
     <div class="sched-panel" id="sched-panel">
       <div class="sched-sub">Select training days</div>
       <div class="sched-days" id="sched-days"></div>
-      <div class="sched-sub">Session focus (optional)</div>
-      <div class="sched-focus-grid" id="sched-focus-grid"></div>
       <button class="btn btn-gold btn-full" onclick="applySchedule()">Apply schedule</button>
     </div>
     <div id="deload-banner"></div>
@@ -1090,21 +1088,13 @@ var HABIT_GROUPS = [
     {id:"shower_am",   name:"Shower",                   desc:"Morning or switch to evening",          coins:2},
   ]},
   { title:"Daily mobility & flexibility", color:"var(--teal)", habits:[
-    {id:"mob_circles", name:"Joint circles (warm-up)",  desc:"Quick wake-up, ~10 each: neck rolls, shoulder rolls, hip circles. Loosens the main joints", coins:3},
-    {id:"mob_wrist",   name:"Wrist prep",               desc:"~30s. Wrist circles both ways, then hands flat on floor/wall and rock forward + back. Preps wrists for crow + handstand work", coins:2},
-    {id:"mob_spine",   name:"Spine rotation",           desc:"10 each side. Standing or on all-fours (thread the needle) — rotate through the ribcage, follow with your eyes. Wakes up the spine", coins:3},
-    {id:"flex_squat",  name:"Deep squat hold",          desc:"1-2 min at the bottom. Heels down, chest up, pry knees out. Ankle + hip mobility = the base of agile movement", coins:4},
-    {id:"flex_couch",  name:"Couch / hip flexor stretch",desc:"60s each side. Back knee down, hips forward. Undoes desk sitting, frees the stride", coins:4},
-    {id:"flex_shoulder",name:"Shoulder pass-throughs",   desc:"10-15 reps with a towel or band. Wide grip, arms over and behind. Shoulder flexibility for reach + guard", coins:3},
-    {id:"flex_straddle",name:"Straddle / pancake sit",   desc:"1-2 min. Legs wide, hinge forward, relax into it. Adductor + hamstring — opens the hips for kicks and low stances", coins:4},
-    {id:"flex_wgs",    name:"Worlds greatest stretch",  desc:"5 each side. Lunge, elbow to floor, rotate arm up. Full-body — the single best daily mobility move", coins:4},
+    {id:"mob_flow",    name:"Wake-up flow",             desc:"~3 min before work: neck / shoulder / hip circles ×10 each · wrist circles + floor rocks · spine rotation ×10 each side", coins:4},
+    {id:"flex_holds",  name:"Deep holds ×2-3",          desc:"~5 min, pick 2-3 and rotate daily:<br>• Deep squat hold 1-2 min<br>• Couch stretch 60s each side<br>• Straddle / pancake sit 1-2 min<br>• Worlds greatest stretch ×5 each side<br>• Shoulder pass-throughs ×12", coins:5},
   ]},
   { title:"At work", color:"var(--green)", habits:[
-    {id:"work_db_circuit",name:"Office DB circuit",      desc:"Early AM, 2-3 rounds. Keep it light — never to failure:<br>• Goblet squat ×12<br>• Overhead press ×10<br>• Lateral raise ×15<br>• Front raise ×12<br>• Bent-over row ×12<br>• Reverse lunge ×8 each leg<br>• Bicep curl ×12<br>• Side bend ×12 each side<br><br>Works WITH the gym:<br>• Gym leg day (Tue) → go light/skip squats + lunges<br>• Gym upper day (Mon) → treat presses + raises as warm-up<br>• Wed/Thu/Sun → full circuit, pure bonus", coins:10},
-    {id:"work_rope1",  name:"Jump rope break 1",         desc:"~1 min or until tired. Every 45 min if you can",  coins:4},
-    {id:"work_rope2",  name:"Jump rope break 2",         desc:"~1 min or until tired",                 coins:4},
-    {id:"work_rope3",  name:"Jump rope break 3",         desc:"~1 min or until tired — bonus if you hit it", coins:4},
-    {id:"work_gtg",    name:"Grease-the-groove sets",    desc:"Curls / raises / presses between tasks — bonus upper volume", coins:5},
+    {id:"work_db_circuit",name:"Office DB circuit",      desc:"Early AM, 2-3 rounds. Light — never to failure:<br>• Goblet squat ×12<br>• Overhead press ×10<br>• Lateral raise ×15<br>• Bent-over row ×12<br>• Reverse lunge ×8 each leg<br>• Bicep curl ×12<br><br>Gym-day rules:<br>• Mon (gym upper) → presses + raises at warm-up weight<br>• Thu (gym combat + legs) → skip squats + lunges<br>• Fri → skip entirely, rest day", coins:10},
+    {id:"work_rope1",  name:"Jump rope breaks",          desc:"~1 min per watch alert, until tired. Aim for 3+, counts from the first one", coins:6},
+    {id:"work_gtg",    name:"GTG pushups",               desc:"Sets of 8-12 between tasks through the day. Directly feeds the 50-in-2-min benchmark", coins:5},
   ]},
   { title:"Training", color:"var(--green)", habits:[
     {id:"warmup",      name:"Warm-up done",             desc:"Never skip — primes joints and heart",  coins:5},
@@ -1117,14 +1107,10 @@ var HABIT_GROUPS = [
     {id:"no_late_food",name:"No food after 8pm",        desc:"Supports fat loss and sleep quality",   coins:5},
     {id:"foam_roll",   name:"Foam rolling",             desc:"5-10 min — quads, hamstrings, back",    coins:5},
     {id:"sleep_early", name:"In bed by 11pm",           desc:"Sleep is where the gains are made",     coins:5},
-    {id:"rest_day",    name:"Full rest day (1+/week)",  desc:"At least one day/week: no gym, no office circuit. Walk + light stretch only. Overtraining watch: if lifts stall, sleep worsens, or you feel run down — pull volume back", coins:8},
+    {id:"rest_day",    name:"Full rest day (Friday)",   desc:"Friday is the built-in rest day: no gym, no office circuit, no rope. Social night. If lifts stall or sleep degrades, cut office volume first", coins:8},
   ]},
   { title:"Night wind-down", color:"var(--blue)", habits:[
-    {id:"night_hip",   name:"Pigeon pose",              desc:"60 sec each side — best hip stretch",   coins:4},
-    {id:"night_spine", name:"Seated spinal twist",      desc:"45 sec each side — decompress spine",   coins:3},
-    {id:"night_ham",   name:"Seated hamstring stretch", desc:"45 sec each leg",                       coins:3},
-    {id:"night_chest", name:"Chest opener stretch",     desc:"30 sec — counteracts desk posture",     coins:3},
-    {id:"night_breath",name:"Deep breathing",           desc:"10 slow breaths — activates recovery",  coins:2},
+    {id:"night_stretch",name:"Wind-down stretch",       desc:"~8 min: pigeon 60s each side · seated twist 45s each side · hamstring 45s each leg · chest opener 30s · 10 slow breaths", coins:6},
   ]},
   { title:"Evening hygiene", color:"var(--teal)", habits:[
     {id:"teeth_pm",    name:"Brush teeth",              desc:"2 min before bed",                      coins:2},
@@ -1205,6 +1191,12 @@ var WARMUPS = {
     {name:"Neck rolls",            sets:"5 each direction", why:"Releases overnight tension"},
     {name:"Shoulder rolls",        sets:"10 fwd, 10 back",  why:"Opens the upper body"},
   ],
+  movement:[
+    {name:"Jump rope or light bounce", sets:"2 min",        why:"Raises core temp, primes the calves and ankles"},
+    {name:"Ankle circles + hops",  sets:"10 each + 20 hops",why:"Ankle springs take all the footwork load"},
+    {name:"Wrist circles + floor rocks",sets:"45 sec",      why:"Mandatory before crow, cartwheels, handstands"},
+    {name:"Hip circles",           sets:"10 each direction",why:"Hips drive every cut and push-off"},
+  ],
 };
 
 var COOLDOWNS = {
@@ -1235,6 +1227,12 @@ var COOLDOWNS = {
   yoga:[
     {name:"Brisk walk",            sets:"20-30 min",        why:"Active recovery and fat burn"},
     {name:"Foam rolling",          sets:"10 min",           why:"Quads, hamstrings, calves, back"},
+  ],
+  movement:[
+    {name:"Pigeon pose",           sets:"60 sec each side", why:"Hip opener — tight hips kill footwork speed"},
+    {name:"Seated spinal twist",   sets:"45 sec each side", why:"Rotational mobility = rotational power"},
+    {name:"Calf + wrist stretch",  sets:"30 sec each",      why:"The two joints today's session hammered"},
+    {name:"Deep breathing",        sets:"10 slow breaths",  why:"Brings the nervous system down"},
   ],
 };
 
@@ -1338,47 +1336,42 @@ var WORKOUTS = {
   },
   anime_warrior:{
     1:[
-      {name:"Seated Arnold press",       sets:"3×10",guide:"Explosive concentric, controlled down",   why:"Shoulder width, quality over volume"},
-      {name:"Dumbbell lateral raises",   sets:"3×15",guide:"Light, perfect form, no swing",           why:"Width builder — office circuit also hits these daily"},
-      {name:"Dumbbell chest press",      sets:"3×8", guide:"Heavier range, controlled",              why:"Pressing strength"},
-      {name:"Dumbbell rows",             sets:"3×10",guide:"Heavy, full squeeze",                     why:"Back thickness balances width"},
-      {name:"Resistance band pulldown",  sets:"3×12",guide:"Full stretch, lat focus",                 why:"Lats build the V"},
-      {name:"Scap pulls or dead hang",   sets:"3×30s",guide:"Pull-up progression — pick your stage",  why:"Building toward 10+ pull-ups"},
-      {name:"Dumbbell bicep curls",      sets:"3×12",guide:"Slow eccentric",                          why:"Arm definition"},
-      {name:"Footwork finisher",         sets:"3×60s",guide:"Ball of foot stance, push-off drill. Circle left 20s, circle right 20s, in-out 20s. Do this every single training day — it needs daily reps to become automatic.", why:"PRIORITY — footwork only becomes instinct through daily repetition"},
+      {block:"PULL FIRST — priority", name:"Pull-up progression", sets:"4×2-5",guide:"FIRST, while fresh. Negatives, band-assisted, or clean reps — leave 1-2 in the tank. Log max clean reps once a week.", why:"3-4 → 10+ pull-ups IS the combat-gymnast benchmark. It headlines now."},
+      {block:"STRENGTH", name:"Dumbbell chest press", sets:"3×8", guide:"Heavy-ish, controlled",       why:"Pressing strength + feeds the 50-pushup benchmark"},
+      {block:"STRENGTH", name:"Dumbbell rows",        sets:"3×10",guide:"Heavy, full squeeze",          why:"Back thickness + pulling strength"},
+      {name:"Seated Arnold press",       sets:"3×10",guide:"Explosive up, controlled down",            why:"Shoulder strength — office circuit covers the light raise volume"},
+      {block:"STRENGTH", name:"Hollow body hold",     sets:"3×20-30s",guide:"Lower back pressed to floor, arms and legs long. Bend knees to scale down.", why:"THE gymnastics foundation — every acro skill sits on this"},
+      {block:"SKILL + ENGINE", name:"Footwork finisher", sets:"3×60s",guide:"Ball of foot, push-off drill. Circle left 20s, right 20s, in-out 20s.", why:"Daily reps make it automatic"},
+      {block:"SKILL + ENGINE", name:"Row machine — zone 2", sets:"12-15 min",guide:"AFTER lifting. Conversational pace, ~135-145 bpm. Start a Row activity on the watch so it logs as training.", why:"Aerobic engine + cholesterol — the non-negotiable gap"},
     ],
     2:[
-      {name:"Goblet squats",             sets:"3×10",guide:"Deep, chest up, control",                 why:"Quad and glute strength"},
+      {block:"EARN-BACK DAY — unlocks after 3 straight weeks of Mon + Thu", name:"Goblet squats", sets:"3×10",guide:"Deep, chest up, control. Until this day is earned back, Tuesday = office circuit + walk only.", why:"Quad and glute strength"},
       {name:"Romanian deadlift",         sets:"3×10",guide:"Hinge at hip, hamstring stretch",         why:"Posterior chain + hamstring shape"},
-      {name:"Reverse lunges",            sets:"3×12",guide:"Long stride, drive through heel",         why:"Glute and quad development + single-leg control"},
-      {name:"Farmer carry",              sets:"3×40s",guide:"Heaviest weight you can hold, walk",     why:"Grip + traps + full-body tension"},
-      {name:"Suitcase carry",            sets:"3×30s each",guide:"One side only, brace hard",         why:"Anti-lateral core = combat strength"},
-      {name:"Standing calf raises",      sets:"3×20",guide:"Slow, full range",                        why:"Calves + ankle strength for agile footwork"},
+      {name:"Reverse lunges",            sets:"3×12",guide:"Long stride, drive through heel",         why:"Single-leg control = agile base"},
+      {name:"Standing calf raises",      sets:"3×20",guide:"Slow, full range",                        why:"Ankle spring for footwork"},
+      {name:"Row machine — zone 2",      sets:"10 min",guide:"Easy finish, conversational pace",      why:"Extra engine volume"},
     ],
     3:[
-      {block:"FOOTWORK (priority)", name:"JKD push-off drill",        sets:"5×60s",guide:"Stay on balls of feet, knees soft. Push off back foot to move forward, side, back. Never flat-footed. Circle left and right continuously. This is the floating movement — drill it until automatic.", why:"PRIORITY — the explosive push-off is the foundation of all Rail Tracer footwork"},
-      {block:"FOOTWORK (priority)", name:"Lateral shuffle + cut",     sets:"4×30s",guide:"Shuffle laterally 3 steps, plant hard, cut opposite direction. Explosive off the outside foot. Stay low.", why:"Changes direction without telegraphing — circling around people"},
-      {block:"FOOTWORK (priority)", name:"In-out footwork",           sets:"4×30s",guide:"Step in (front foot leads), step out (back foot pushes). Like a fighter measuring distance. Stay bouncy.", why:"Controls space — close distance and escape fast"},
-      {block:"FOOTWORK (priority)", name:"360 circle drill",          sets:"3×60s",guide:"Pick a spot on the wall as your opponent. Circle it continuously — always facing it, moving around it. Mix speeds.", why:"Circling around people is a skill, drill it specifically"},
-      {block:"FOOTWORK (priority)", name:"Explosive step + freeze",   sets:"3×8 each direction",guide:"From stance, explosive push-off step in any direction, land soft, freeze balanced. No stumbling on landing.", why:"Landing control — useless to be fast if you fall over"},
-      {block:"ACROBATICS", name:"Forward rolls",             sets:"3×5", guide:"Tuck chin, roll over shoulder not neck. Both directions.", why:"Ground recovery — get up from any position fast"},
-      {block:"ACROBATICS", name:"Cartwheel practice",        sets:"3×5 each side",guide:"Hands plant, legs over. Scale to walking version if needed.",why:"Lateral body control + evasion"},
-      {block:"ACROBATICS", name:"Crow pose",                 sets:"3×max hold",guide:"Knees on triceps, lean forward, lift feet. Build to 30s.",why:"Wrist + core strength for handstand progression"},
-      {block:"ACROBATICS", name:"Handstand wall hold",       sets:"3×20s",guide:"Belly to wall, arms locked, ribs tucked",why:"Inverted shoulder strength + body line"},
-      {block:"MOBILITY", name:"Pigeon pose",               sets:"60s each side",guide:"Sink in, breathe through it",   why:"Hip opener — tight hips kill footwork speed"},
-      {block:"MOBILITY", name:"Seated spinal twist",       sets:"45s each side",guide:"Tall spine, rotate from ribcage",why:"Rotational mobility = rotational power"},
+      {block:"FOOTWORK — home, no gym needed", name:"JKD push-off drill", sets:"3×60s",guide:"Balls of feet, knees soft. Push off back foot — forward, side, back. Never flat-footed. This is the floating movement.", why:"PRIORITY — the push-off is the foundation of all Rail Tracer footwork"},
+      {name:"Lateral shuffle + cut",     sets:"3×30s",guide:"Shuffle 3 steps, plant hard, cut back the other way. Explosive off the outside foot, stay low.", why:"Direction changes without telegraphing"},
+      {name:"In-out footwork",           sets:"3×30s",guide:"Step in front-foot leads, step out back-foot pushes. Stay bouncy.", why:"Distance control — close and escape"},
+      {name:"Broad jump + stick",        sets:"3×3",guide:"Jump far, land soft, FREEZE balanced for 2s. Full rest between sets. Fresh, never fatigued.", why:"Explosive power + landing mechanics — the missing Rail Tracer piece"},
+      {block:"ACROBATICS — mat or grass only", name:"Forward rolls", sets:"2×5",guide:"Tuck chin, roll over shoulder not neck. Both directions.", why:"Ground recovery from any position"},
+      {name:"Cartwheel practice",        sets:"2×3 each side",guide:"Hands-elevated version first. Low volume on purpose — wrists take everything.", why:"Lateral body control + evasion"},
+      {name:"Crow or wall handstand",    sets:"3×max",guide:"Wrist prep FIRST. Alternate sessions: crow max hold / belly-to-wall handstand 15-20s.", why:"Straight-arm strength toward the gymnast skills"},
     ],
     4:[
-      {name:"Footwork-only round",       sets:"1×3min",guide:"No punching. Just move. Circle, cut, in-out, push-off. Imagine someone in front of you — never stop moving, never cross your feet.", why:"PRIORITY — groove footwork before adding hands"},
-      {name:"Bag rounds with footwork",  sets:"4×2min",guide:"R1 jabs + circle after every punch. R2 jab/cross + exit sideways. R3 full combos + move off the line. R4 power + explosive exits. 60s rest between.", why:"Hands and feet together — footwork is not optional"},
-      {name:"Burpees",                   sets:"3×40s",guide:"Full jump, chest to floor",              why:"Explosive conditioning between rounds"},
-      {name:"Bear crawl",                sets:"3×20m",guide:"Knees hover off floor, opposite hand/foot",why:"Coordination + shoulder endurance"},
-      {name:"Plank",                     sets:"3×60s",guide:"Rigid, building toward 2 min hold",      why:"Plank benchmark + core foundation"},
-      {name:"Shadow boxing finisher",    sets:"2×60s",guide:"Footwork only first 30s — circles and cuts. Add hands second 30s. Finish light.",why:"Groove the movement pattern fresh in muscle memory"},
+      {block:"COMBAT", name:"Footwork-only round", sets:"1×3min",guide:"No punching. Just move — circle, cut, in-out, push-off. Never cross your feet.", why:"Groove footwork before adding hands"},
+      {name:"Bag rounds",                sets:"3×2min",guide:"WRIST WRAPS every session. R1 jabs + circle out (film this round on your phone). R2 jab/cross + exit sideways. R3 combos + move off the line. 60s rest.", why:"Striking + footwork together — review the film after"},
+      {block:"STRENGTH", name:"Goblet squats", sets:"3×8-10",guide:"Deep, chest up, control", why:"Legs live here until Tuesday is earned back"},
+      {name:"Romanian deadlift",         sets:"3×8-10",guide:"Hinge at hip, hamstring stretch", why:"Posterior chain + hinge power"},
+      {name:"Suitcase carry",            sets:"3×30s each",guide:"Heavy, brace hard, walk straight", why:"Anti-lateral core = combat strength"},
+      {name:"Plank",                     sets:"3×60s",guide:"Rigid, building toward 2 min hold", why:"Plank benchmark + core foundation"},
+      {block:"ENGINE", name:"Row machine — zone 2", sets:"15-20 min",guide:"After lifting, conversational pace. Start a Row activity on the watch.", why:"The engine — this is what fixes never getting winded"},
     ],
     0:[
-      {name:"Weighted ruck",             sets:"30-60 min",guide:"25-45 lb pack. Log distance, time, weight.",why:"Building toward 12 mi @ 45 lb benchmark"},
-      {name:"Pull-up progression",       sets:"4×max",guide:"Assisted, negatives, or full reps — pick your stage",why:"Pulling power = combat + climbing capability"},
+      {block:"BONUS DAY — optional, zero guilt if skipped", name:"Ruck or long row", sets:"30-45 min",guide:"Ruck at 20-25 lb MAX (joints first) or 30-40 min zone-2 row. Alternate weeks.", why:"Extra engine volume when life allows"},
+      {name:"Pull-up progression",       sets:"3×submax",guide:"Leave 1-2 in the tank each set", why:"Extra weekly frequency toward 10+"},
       {name:"Farmer carry",              sets:"3×40m",guide:"Heaviest you can hold, walk straight",   why:"Grip + traps + full-body tension"},
       {name:"Cooldown stretch",          sets:"10 min",guide:"Hip flexors hard, hamstrings, calves",  why:"Rucking trashes hip flexors"},
     ],
@@ -2011,7 +2004,7 @@ function autoAssignDays(selectedDays, bodyType){
   return assignment;
 }
 
-var FOCUS_TO_DAY = {upper:1,lower:2,yoga:3,hiit:4,full:0,push:1,pull:2,legs:2};
+var FOCUS_TO_DAY = {upper:1,lower:2,yoga:3,hiit:4,full:0,push:1,pull:1,legs:2};
 
 function switchTab(name){
   ["profile","habits","train","settings","rewards"].forEach(function(s){
@@ -2329,7 +2322,7 @@ function calcXP(){
 function updateHeader(){
   var xp = calcXP();
   var lvl = Math.floor(xp/100)+1;
-  data.title = TITLES[Math.min(lvl-1, TITLES.length-1)];
+  data.title = data.customTitle || TITLES[Math.min(lvl-1, TITLES.length-1)];
   var name = (data.profile&&data.profile.name)||'Player';
   var el;
   el = document.getElementById('char-name'); if(el) el.textContent = name.toUpperCase();
@@ -3006,7 +2999,7 @@ function renderHabits(){
       // Habit note
       var noteText=getHabitNote(h.id,todayKey());
       html+="<div id='hnote-"+h.id+"' style='display:none;padding:4px 14px 8px'>"
-        +"<textarea onchange='saveHabitNote(\"'"+h.id+"'\",\""+todayKey()+"\",this.value)' "
+        +"<textarea onchange='saveHabitNote(\""+h.id+"\",\""+todayKey()+"\",this.value)' "
         +"placeholder='Add a note for today...' "
         +"style='width:100%;padding:7px;font-family:var(--font-b);font-size:12px;border:.5px solid var(--border2);border-radius:4px;background:var(--bg3);color:var(--text);resize:none;height:56px'>"
         +noteText+"</textarea>"
@@ -3224,7 +3217,7 @@ function updateGroupStreaks(){
 // ═══════════════════════════════════════════════════
 // BOSS BATTLE
 // ═══════════════════════════════════════════════════
-function getWeekKey(){ var d=new Date(),day=d.getDay(),m=new Date(d); m.setDate(d.getDate()-(day===0?6:day-1)); m.setHours(0,0,0,0); return m.toISOString().slice(0,10); }
+function getWeekKey(){ var d=new Date(),day=d.getDay(),m=new Date(d); m.setDate(d.getDate()-(day===0?6:day-1)); return m.getFullYear()+'-'+String(m.getMonth()+1).padStart(2,'0')+'-'+String(m.getDate()).padStart(2,'0'); }
 
 function getCurrentBoss(){
   var bd=ls('rpg_boss',{}), wk=getWeekKey();
@@ -3236,8 +3229,9 @@ function calcBossProgress(){
   var bd=getCurrentBoss(), boss=BOSSES[bd.bossIdx], h=data.habits||{};
   var wkDate=new Date(getWeekKey()+'T12:00:00'), done=0;
   if(boss.goal==='workouts') for(var i=0;i<7;i++){ var d=new Date(wkDate);d.setDate(wkDate.getDate()+i);if(h[d.toDateString()]&&h[d.toDateString()]['workout'])done++; }
-  else if(boss.goal==='morning') for(var i2=0;i2<7;i2++){ var d2=new Date(wkDate);d2.setDate(wkDate.getDate()+i2);var m=h[d2.toDateString()]||{};if(m['teeth_am']&&m['mob_neck'])done++; }
+  else if(boss.goal==='morning') for(var i2=0;i2<7;i2++){ var d2=new Date(wkDate);d2.setDate(wkDate.getDate()+i2);var m=h[d2.toDateString()]||{};if(m['teeth_am']&&m['mob_flow'])done++; }
   else if(boss.goal==='recovery') for(var i3=0;i3<7;i3++){ var d3=new Date(wkDate);d3.setDate(wkDate.getDate()+i3);var r=h[d3.toDateString()]||{};if(r['water']||r['foam_roll'])done++; }
+  else if(boss.goal==='full_days') for(var i4=0;i4<7;i4++){ var d4=new Date(wkDate);d4.setDate(wkDate.getDate()+i4);var f=h[d4.toDateString()]||{}; if(HABIT_GROUPS.every(function(g){return g.habits.some(function(hb){return f[hb.id];});}))done++; }
   else done=Math.min(boss.target,calcCurrentStreak());
   return Math.min(done,boss.target);
 }
@@ -3247,7 +3241,7 @@ function renderBoss(){
   var bd=getCurrentBoss(), boss=BOSSES[bd.bossIdx];
   if(bd.defeated){ wrap.innerHTML="<div style='margin:8px 16px'><div class='boss-defeated'>✓ "+boss.name+" DEFEATED! Weekly reward claimed.</div></div>"; return; }
   var prog=calcBossProgress(), pct=Math.round((prog/boss.target)*100), hp=Math.max(0,100-pct);
-  if(prog>=boss.target){ bd.defeated=true; lsSet('rpg_boss',bd); freeGacha(); data.coins+=50; save(); renderBoss(); return; }
+  if(prog>=boss.target){ bd.defeated=true; lsSet('rpg_boss',bd); lsSet('rpg_boss_defeats',(ls('rpg_boss_defeats',0)||0)+1); freeGacha(); data.coins+=50; save(); renderBoss(); return; }
   wrap.innerHTML="<div class='boss-card'>"
     +"<div class='boss-head'><div class='boss-title-text'>⚔ WEEKLY BOSS</div><div style='font-family:var(--font-m);font-size:9px;color:var(--text3)'>"+getWeekKey()+"</div></div>"
     +"<div class='boss-body'>"
@@ -3421,7 +3415,7 @@ function legendaryDrop(){
 }
 function applyGachaItem(item){
   if(item.type==='pet'&&data.pets.indexOf(item.id)<0) data.pets.push(item.id);
-  if(item.type==='title') data.title=item.name.toUpperCase();
+  if(item.type==='title'){ data.customTitle=item.name.toUpperCase(); data.title=data.customTitle; }
   if(item.type==='coins') data.coins+=(item.id==='bonus_sm'?25:75);
   save();
 }
@@ -3490,8 +3484,6 @@ function buildSchedEditor(){
   schedDaysSel=data.schedule?data.schedule.selectedDays.slice():[1,2,3,4,0];
   var dr=document.getElementById('sched-days');
   if(dr) dr.innerHTML=DAY_NAMES.map(function(n,i){ return "<button class='sched-day"+(schedDaysSel.indexOf(i)>=0?' sel':'')+"' id='sd-"+i+"' onclick='toggleSchedDay("+i+")'><span>"+n+"</span></button>"; }).join('');
-  var fr=document.getElementById('sched-focus-grid');
-  if(fr) fr.innerHTML=FOCUS_OPTIONS.map(function(f){ return "<button class='sched-focus-btn' id='sf-"+f.id+"' onclick='toggleFocus(\""+f.id+"\")'>"+f.label+"<br><span style='opacity:.6'>"+f.desc+"</span></button>"; }).join('');
 }
 
 function toggleSchedDay(i){
@@ -3499,16 +3491,16 @@ function toggleSchedDay(i){
   if(idx>=0) schedDaysSel.splice(idx,1); else schedDaysSel.push(i);
   var btn=document.getElementById('sd-'+i); if(btn) btn.classList.toggle('sel',schedDaysSel.indexOf(i)>=0);
 }
-function toggleFocus(id){ document.querySelectorAll('.sched-focus-btn').forEach(function(b){b.classList.remove('sel');}); document.getElementById('sf-'+id).classList.add('sel'); }
 function applySchedule(){
   if(!schedDaysSel.length){ showToast('Select at least one day'); return; }
   var assign=autoAssignDays(schedDaysSel, data.bodyType||'classic');
-  data.schedule={days:assign, selectedDays:schedDaysSel, overrides:schedFocusSel};
+  data.schedule={days:assign, selectedDays:schedDaysSel, overrides:{}};
   save(); document.getElementById('sched-panel').classList.remove('open');
   renderTrain(activeTrainDay!==null?activeTrainDay:new Date().getDay());
 }
 
 function getFocusKey(dayIdx, sched){
+  if(dayIdx===3&&isCombatGoal()) return 'movement';
   var fid=(sched&&sched.days&&sched.days[dayIdx])||null;
   if(fid==='upper'||fid==='push'||fid==='pull') return 'upper';
   if(fid==='lower'||fid==='legs') return 'lower';
@@ -3520,6 +3512,16 @@ function getFocusKey(dayIdx, sched){
   if(dayIdx===3) return 'yoga';
   if(dayIdx===4) return 'hiit';
   return 'full';
+}
+
+// Single source of truth for which exercise list a day serves.
+// Null-safe lookups: FOCUS_TO_DAY.full is 0, so ||-fallbacks silently broke it.
+function getDayExercises(bt, dayIdx, sched){
+  var focusId=(sched&&sched.days&&sched.days[dayIdx])||null;
+  var exDayIdx=(focusId!=null&&FOCUS_TO_DAY[focusId]!=null)?FOCUS_TO_DAY[focusId]:dayIdx;
+  var fbMap={upper:1,lower:2,yoga:3,hiit:4,full:0,movement:3};
+  var fbIdx=fbMap[getFocusKey(dayIdx,sched)]; if(fbIdx==null) fbIdx=0;
+  return (WORKOUTS[bt]&&(WORKOUTS[bt][exDayIdx]||WORKOUTS[bt][fbIdx]))||(WORKOUTS.classic[exDayIdx]||WORKOUTS.classic[fbIdx])||[];
 }
 
 // ═══════════════════════════════════════════════════
@@ -3539,12 +3541,16 @@ function saveExLog(exerciseName, sets){
   saveWorkoutLog(d);
 }
 
+// ONE id transform for exercise DOM ids — buildExCard, toggleSetDone and
+// show1RMResult drifted apart and broke every hyphenated exercise name.
+function exSafeId(name){ return name.replace(/\s/g,'_').replace(/[^a-zA-Z0-9_]/g,''); }
+
 function toggleSetDone(exName, setIdx){
   var sets=getExLog(exName);
   if(!sets[setIdx]) sets[setIdx]={reps:'',weight:'',done:false};
   sets[setIdx].done=!sets[setIdx].done;
   saveExLog(exName, sets);
-  var btn=document.getElementById('setdone-'+exName.replace(/\s/g,'_')+'-'+setIdx);
+  var btn=document.getElementById('setdone-'+exSafeId(exName)+'-'+setIdx);
   if(btn) btn.classList.toggle('done', sets[setIdx].done);
   // Check if all sets done → mark workout habit
   var allDone=sets.length>0&&sets.every(function(s){return s.done;});
@@ -3554,9 +3560,8 @@ function toggleSetDone(exName, setIdx){
     var _ex=null;
     var _bt=data.bodyType||'classic';
     var _sched=getSchedule();
-    var _fk=getFocusKey(activeTrainDay||new Date().getDay(),_sched);
-    var _di=activeTrainDay||new Date().getDay();
-    var _exs=(WORKOUTS[_bt]&&WORKOUTS[_bt][_di])||(WORKOUTS.classic[_di])||[];
+    var _di=(activeTrainDay!=null?activeTrainDay:new Date().getDay());
+    var _exs=getDayExercises(_bt,_di,_sched);
     _exs.forEach(function(e){if(e.name===exName)_ex=e;});
     if(_ex){var _rs=getRestSeconds(_ex.sets);if(_rs>0)startRestTimer(_rs);}
   }
@@ -3602,7 +3607,7 @@ function buildExCard(ex){
   var sets=getExLog(ex.name);
   // Default 3 sets if none logged
   if(!sets.length){ sets=[{reps:'',weight:'',done:false},{reps:'',weight:'',done:false},{reps:'',weight:'',done:false}]; saveExLog(ex.name,sets); }
-  var safeId=ex.name.replace(/\s/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+  var safeId=exSafeId(ex.name);
   var exSwaps=ls('rpg_ex_swaps',{});
   var displayName=exSwaps[ex.name]?exSwaps[ex.name]:ex.name;
   var isSwapped=!!exSwaps[ex.name];
@@ -3642,8 +3647,8 @@ function buildExCard(ex){
     +"<div style='margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:4px;border-left:2px solid var(--purple)'>"
     +"<div style='font-family:var(--font-m);font-size:9px;color:var(--purple);margin-bottom:5px'>1RM CALCULATOR</div>"
     +"<div style='display:flex;align-items:center;gap:5px'>"
-    +"<input id='1rm-w-"+safeId+"' type='number' inputmode='decimal' placeholder='"+wtUnit()+"' style='width:60px;padding:4px 6px;font-family:var(--font-m);font-size:11px;border:.5px solid var(--border2);border-radius:4px;background:var(--bg);color:var(--text)' oninput='show1RMResult(\"'+ex.name+'\")'>"
-    +"<input id='1rm-r-"+safeId+"' type='number' inputmode='numeric' placeholder='reps' style='width:50px;padding:4px 6px;font-family:var(--font-m);font-size:11px;border:.5px solid var(--border2);border-radius:4px;background:var(--bg);color:var(--text)' oninput='show1RMResult(\"'+ex.name+'\")'>"
+    +"<input id='1rm-w-"+safeId+"' type='number' inputmode='decimal' placeholder='"+wtUnit()+"' style='width:60px;padding:4px 6px;font-family:var(--font-m);font-size:11px;border:.5px solid var(--border2);border-radius:4px;background:var(--bg);color:var(--text)' oninput='show1RMResult(\""+safeName+"\")'>"
+    +"<input id='1rm-r-"+safeId+"' type='number' inputmode='numeric' placeholder='reps' style='width:50px;padding:4px 6px;font-family:var(--font-m);font-size:11px;border:.5px solid var(--border2);border-radius:4px;background:var(--bg);color:var(--text)' oninput='show1RMResult(\""+safeName+"\")'>"
     +"<div id='1rm-res-"+safeId+"' style='font-family:var(--font-m);font-size:10px;color:var(--purple);flex:1'></div>"
     +"</div></div>"
     +"<button class='log-add-set' onclick='addSet(\""+ex.name+"\")'>+ Add set</button>"
@@ -3741,11 +3746,7 @@ function updateTrainProgress(){
   var focusKey = getFocusKey(dayIdx, sched);
   var warmup = WARMUPS[focusKey]||WARMUPS.full;
   var cooldown = COOLDOWNS[focusKey]||COOLDOWNS.full;
-  var _focusId1=(sched&&sched.days&&sched.days[dayIdx])||null;
-  var _exIdx1=_focusId1?(FOCUS_TO_DAY[_focusId1]||dayIdx):dayIdx;
-  var _fk1={'upper':1,'lower':2,'yoga':3,'hiit':4,'full':0};
-  var _fbIdx1=_fk1[focusKey]!==undefined?_fk1[focusKey]:0;
-  var exs=(WORKOUTS[bt]&&(WORKOUTS[bt][_exIdx1]||WORKOUTS[bt][_fbIdx1]))||(WORKOUTS.classic[_exIdx1]||WORKOUTS.classic[_fbIdx1])||[];
+  var exs=getDayExercises(bt,dayIdx,sched);
 
   // Count done items
   function countDone(items, prefix){
@@ -3810,11 +3811,7 @@ function getDayCompletion(dayIdx){
   var bt = data.bodyType||'classic';
   var sched = getSchedule();
   var focusKey = getFocusKey(dayIdx, sched);
-  var focusId = (sched&&sched.days&&sched.days[dayIdx])||null;
-  var exDayIdx = focusId?(FOCUS_TO_DAY[focusId]||dayIdx):dayIdx;
-  var _fk2={'upper':1,'lower':2,'yoga':3,'hiit':4,'full':0};
-  var _fbIdx2=_fk2[focusKey]!==undefined?_fk2[focusKey]:0;
-  var exs=(WORKOUTS[bt]&&(WORKOUTS[bt][exDayIdx]||WORKOUTS[bt][_fbIdx2]))||(WORKOUTS.classic[exDayIdx]||WORKOUTS.classic[_fbIdx2])||[];
+  var exs=getDayExercises(bt,dayIdx,sched);
   var warmup = WARMUPS[focusKey]||WARMUPS.full;
   var cooldown = COOLDOWNS[focusKey]||COOLDOWNS.full;
 
@@ -3882,12 +3879,10 @@ function renderTrain(dayIdx){
   }
 
   var focusId=(sched&&sched.days&&sched.days[dayIdx])||null;
-  var exDayIdx=focusId?(FOCUS_TO_DAY[focusId]||dayIdx):dayIdx;
   var focusKey=getFocusKey(dayIdx,sched);
   var focusObj=FOCUS_OPTIONS.find(function(f){return f.id===focusId;})||{label:DAY_FULL[dayIdx],desc:''};
-  var _focusKeyFallback={upper:1,lower:2,yoga:3,hiit:4,full:0};
-  var _fbIdx=_focusKeyFallback[focusKey]||0;
-  var exs=(WORKOUTS[bt]&&(WORKOUTS[bt][exDayIdx]||WORKOUTS[bt][_fbIdx]))||(WORKOUTS.classic[exDayIdx]||WORKOUTS.classic[_fbIdx])||[];
+  if(focusKey==='movement') focusObj={label:'Movement & Skills',desc:'Footwork + acrobatics — no gym needed, do it at home'};
+  var exs=getDayExercises(bt,dayIdx,sched);
   var warmup=WARMUPS[focusKey]||WARMUPS.full;
   var cooldown=COOLDOWNS[focusKey]||COOLDOWNS.full;
 
@@ -4887,9 +4882,9 @@ function calc1RM(weight, reps){
 }
 
 function show1RMResult(exName){
-  var wEl = document.getElementById('1rm-w-'+exName.replace(/[^a-zA-Z0-9]/g,'_'));
-  var rEl = document.getElementById('1rm-r-'+exName.replace(/[^a-zA-Z0-9]/g,'_'));
-  var resEl = document.getElementById('1rm-res-'+exName.replace(/[^a-zA-Z0-9]/g,'_'));
+  var wEl = document.getElementById('1rm-w-'+exSafeId(exName));
+  var rEl = document.getElementById('1rm-r-'+exSafeId(exName));
+  var resEl = document.getElementById('1rm-res-'+exSafeId(exName));
   if(!wEl||!rEl||!resEl) return;
   var w=parseFloat(wEl.value), r=parseInt(rEl.value);
   if(!w||!r){ resEl.textContent=''; return; }
@@ -6658,6 +6653,8 @@ var BACKUP_KEYS = [
   'rpg_achievements','rpg_supersets_0','rpg_supersets_1','rpg_supersets_2',
   'rpg_supersets_3','rpg_supersets_4','rpg_supersets_5','rpg_supersets_6',
   'rpg_walk_log','rpg_soreness','rpg_onboarded','rpg_comeback_challenge',
+  'rpg_capability_records','rpg_sauna_log','rpg_high_vol_weeks',
+  'rpg_deload_dismissed','rpg_boss_defeats',
 ];
 
 function exportBackup(){
@@ -6747,12 +6744,7 @@ document.getElementById('subpanel-train').addEventListener('click', function(e){
   var addSSBtn=e.target.closest('button[data-add-superset]');
   if(addSSBtn){
     var bt2=data.bodyType||'classic', sched2=getSchedule();
-    var fk2=getFocusKey(activeTrainDay,sched2);
-    var fid2=(sched2&&sched2.days&&sched2.days[activeTrainDay])||null;
-    var edi2=fid2?(FOCUS_TO_DAY[fid2]||activeTrainDay):activeTrainDay;
-    var fbk2={upper:1,lower:2,yoga:3,hiit:4,full:0};
-    var fbi2=fbk2[fk2]!==undefined?fbk2[fk2]:0;
-    var exs2=(WORKOUTS[bt2]&&(WORKOUTS[bt2][edi2]||WORKOUTS[bt2][fbi2]))||(WORKOUTS.classic[edi2]||WORKOUTS.classic[fbi2])||[];
+    var exs2=getDayExercises(bt2,activeTrainDay,sched2);
     var names=exs2.map(function(e){return e.name;});
     openSupersetModal(activeTrainDay,addSSBtn.dataset.addSuperset,names);
     return;

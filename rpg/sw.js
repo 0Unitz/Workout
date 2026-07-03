@@ -1,4 +1,4 @@
-const CACHE = 'rpme-v15';
+const CACHE = 'rpme-v16';
 const FILES = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -13,9 +13,19 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
+// Cache-first for precached files; runtime-cache CDN assets (Chart.js, fonts)
+// so charts and typography survive offline.
+const RUNTIME_HOSTS = ['cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    caches.match(e.request).then(cached => cached || fetch(e.request).then(resp => {
+      const url = new URL(e.request.url);
+      if (resp.ok && RUNTIME_HOSTS.includes(url.hostname)) {
+        const copy = resp.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+      }
+      return resp;
+    }))
   );
 });
 
