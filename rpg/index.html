@@ -413,6 +413,7 @@ label.field-lbl{display:block;font-family:var(--font-m);font-size:9px;color:var(
 
 /* Exercise card */
 .ex-card{background:var(--panel);border:.5px solid var(--border);border-radius:var(--radius);margin-bottom:6px;overflow:hidden}
+.ex-block-divider{font-family:var(--font-d);font-size:10px;letter-spacing:.1em;color:var(--gold);margin:12px 2px 6px;padding-bottom:4px;border-bottom:.5px solid var(--border2)}
 .ex-head{padding:9px 12px;display:flex;align-items:center;justify-content:space-between}
 .ex-name{font-size:13px;font-weight:500;letter-spacing:.01em}
 .ex-sets{font-family:var(--font-m);font-size:10px;color:var(--gold)}
@@ -1087,14 +1088,6 @@ var HABIT_GROUPS = [
     {id:"deodorant",   name:"Deodorant",                desc:"After shower or before leaving",        coins:1},
     {id:"shower_am",   name:"Shower",                   desc:"Morning or switch to evening",          coins:2},
   ]},
-  { title:"Morning mobility", color:"var(--teal)", habits:[
-    {id:"mob_neck",    name:"Neck rolls",               desc:"5 slow circles each direction",         coins:2},
-    {id:"mob_shoulder",name:"Shoulder rolls",           desc:"10 forward, 10 back",                   coins:2},
-    {id:"mob_torso",   name:"Torso rotation",           desc:"10 each side — arms out, rotate",       coins:2},
-    {id:"mob_hip",     name:"Hip circles",              desc:"10 each direction — hands on hips",     coins:2},
-    {id:"mob_quad",    name:"Standing quad stretch",    desc:"20 sec each leg",                       coins:2},
-    {id:"mob_calf",    name:"Calf raises",              desc:"15 slow reps to warm up",               coins:2},
-  ]},
   { title:"Training", color:"var(--green)", habits:[
     {id:"warmup",      name:"Warm-up done",             desc:"Never skip — primes joints and heart",  coins:5},
     {id:"workout",     name:"Workout completed",        desc:"Full session logged",                   coins:20},
@@ -1108,7 +1101,8 @@ var HABIT_GROUPS = [
     {id:"work_rope3",  name:"Jump rope break 3",         desc:"~1 min or until tired — bonus if you hit it", coins:4},
     {id:"work_gtg",    name:"Grease-the-groove sets",    desc:"Curls / raises / presses between tasks — bonus upper volume", coins:5},
   ]},
-  { title:"Daily flexibility", color:"var(--teal)", habits:[
+  { title:"Daily mobility & flexibility", color:"var(--teal)", habits:[
+    {id:"mob_circles", name:"Joint circles (warm-up)",  desc:"Quick wake-up, ~10 each: neck rolls, shoulder rolls, hip circles. Loosens the main joints", coins:3},
     {id:"flex_squat",  name:"Deep squat hold",          desc:"1-2 min at the bottom. Heels down, chest up, pry knees out. Ankle + hip mobility = the base of agile movement", coins:4},
     {id:"flex_couch",  name:"Couch / hip flexor stretch",desc:"60s each side. Back knee down, hips forward. Undoes desk sitting, frees the stride", coins:4},
     {id:"flex_shoulder",name:"Shoulder pass-throughs",   desc:"10-15 reps with a towel or band. Wide grip, arms over and behind. Shoulder flexibility for reach + guard", coins:3},
@@ -1122,7 +1116,7 @@ var HABIT_GROUPS = [
     {id:"sleep_early", name:"In bed by 11pm",           desc:"Sleep is where the gains are made",     coins:5},
     {id:"rest_day",    name:"Full rest day (1+/week)",  desc:"At least one day/week: no gym, no office circuit. Walk + light stretch only. Overtraining watch: if lifts stall, sleep worsens, or you feel run down — pull volume back", coins:8},
   ]},
-  { title:"Night mobility", color:"var(--blue)", habits:[
+  { title:"Night wind-down", color:"var(--blue)", habits:[
     {id:"night_hip",   name:"Pigeon pose",              desc:"60 sec each side — best hip stretch",   coins:4},
     {id:"night_spine", name:"Seated spinal twist",      desc:"45 sec each side — decompress spine",   coins:3},
     {id:"night_ham",   name:"Seated hamstring stretch", desc:"45 sec each leg",                       coins:3},
@@ -1359,17 +1353,17 @@ var WORKOUTS = {
       {name:"Standing calf raises",      sets:"3×20",guide:"Slow, full range",                        why:"Calves + ankle strength for agile footwork"},
     ],
     3:[
-      {name:"JKD push-off drill",        sets:"5×60s",guide:"Stay on balls of feet, knees soft. Push off back foot to move forward, side, back. Never flat-footed. Circle left and right continuously. This is the floating movement — drill it until automatic.", why:"PRIORITY — the explosive push-off is the foundation of all Rail Tracer footwork"},
-      {name:"Lateral shuffle + cut",     sets:"4×30s",guide:"Shuffle laterally 3 steps, plant hard, cut opposite direction. Explosive off the outside foot. Stay low.", why:"Changes direction without telegraphing — circling around people"},
-      {name:"In-out footwork",           sets:"4×30s",guide:"Step in (front foot leads), step out (back foot pushes). Like a fighter measuring distance. Stay bouncy.", why:"Controls space — close distance and escape fast"},
-      {name:"360 circle drill",          sets:"3×60s",guide:"Pick a spot on the wall as your opponent. Circle it continuously — always facing it, moving around it. Mix speeds.", why:"Circling around people is a skill, drill it specifically"},
-      {name:"Explosive step + freeze",   sets:"3×8 each direction",guide:"From stance, explosive push-off step in any direction, land soft, freeze balanced. No stumbling on landing.", why:"Landing control — useless to be fast if you fall over"},
-      {name:"Forward rolls",             sets:"3×5", guide:"Tuck chin, roll over shoulder not neck. Both directions.", why:"Ground recovery — get up from any position fast"},
-      {name:"Cartwheel practice",        sets:"3×5 each side",guide:"Hands plant, legs over. Scale to walking version if needed.",why:"Lateral body control + evasion"},
-      {name:"Crow pose",                 sets:"3×max hold",guide:"Knees on triceps, lean forward, lift feet. Build to 30s.",why:"Wrist + core strength for handstand progression"},
-      {name:"Handstand wall hold",       sets:"3×20s",guide:"Belly to wall, arms locked, ribs tucked",why:"Inverted shoulder strength + body line"},
-      {name:"Pigeon pose",               sets:"60s each side",guide:"Sink in, breathe through it",   why:"Hip opener — tight hips kill footwork speed"},
-      {name:"Seated spinal twist",       sets:"45s each side",guide:"Tall spine, rotate from ribcage",why:"Rotational mobility = rotational power"},
+      {block:"FOOTWORK (priority)", name:"JKD push-off drill",        sets:"5×60s",guide:"Stay on balls of feet, knees soft. Push off back foot to move forward, side, back. Never flat-footed. Circle left and right continuously. This is the floating movement — drill it until automatic.", why:"PRIORITY — the explosive push-off is the foundation of all Rail Tracer footwork"},
+      {block:"FOOTWORK (priority)", name:"Lateral shuffle + cut",     sets:"4×30s",guide:"Shuffle laterally 3 steps, plant hard, cut opposite direction. Explosive off the outside foot. Stay low.", why:"Changes direction without telegraphing — circling around people"},
+      {block:"FOOTWORK (priority)", name:"In-out footwork",           sets:"4×30s",guide:"Step in (front foot leads), step out (back foot pushes). Like a fighter measuring distance. Stay bouncy.", why:"Controls space — close distance and escape fast"},
+      {block:"FOOTWORK (priority)", name:"360 circle drill",          sets:"3×60s",guide:"Pick a spot on the wall as your opponent. Circle it continuously — always facing it, moving around it. Mix speeds.", why:"Circling around people is a skill, drill it specifically"},
+      {block:"FOOTWORK (priority)", name:"Explosive step + freeze",   sets:"3×8 each direction",guide:"From stance, explosive push-off step in any direction, land soft, freeze balanced. No stumbling on landing.", why:"Landing control — useless to be fast if you fall over"},
+      {block:"ACROBATICS", name:"Forward rolls",             sets:"3×5", guide:"Tuck chin, roll over shoulder not neck. Both directions.", why:"Ground recovery — get up from any position fast"},
+      {block:"ACROBATICS", name:"Cartwheel practice",        sets:"3×5 each side",guide:"Hands plant, legs over. Scale to walking version if needed.",why:"Lateral body control + evasion"},
+      {block:"ACROBATICS", name:"Crow pose",                 sets:"3×max hold",guide:"Knees on triceps, lean forward, lift feet. Build to 30s.",why:"Wrist + core strength for handstand progression"},
+      {block:"ACROBATICS", name:"Handstand wall hold",       sets:"3×20s",guide:"Belly to wall, arms locked, ribs tucked",why:"Inverted shoulder strength + body line"},
+      {block:"MOBILITY", name:"Pigeon pose",               sets:"60s each side",guide:"Sink in, breathe through it",   why:"Hip opener — tight hips kill footwork speed"},
+      {block:"MOBILITY", name:"Seated spinal twist",       sets:"45s each side",guide:"Tall spine, rotate from ribcage",why:"Rotational mobility = rotational power"},
     ],
     4:[
       {name:"Footwork-only round",       sets:"1×3min",guide:"No punching. Just move. Circle, cut, in-out, push-off. Imagine someone in front of you — never stop moving, never cross your feet.", why:"PRIORITY — groove footwork before adding hands"},
@@ -3587,6 +3581,20 @@ function updateSetVal(exName, setIdx, field, val){
   saveExLog(exName,sets);
 }
 
+function buildWorkoutList(exs){
+  // Renders exercise cards, inserting a block divider whenever ex.block changes.
+  // exs entries all remain real exercises (with .name), so progress/counting is unaffected.
+  var lastBlock=null, out='';
+  exs.forEach(function(ex){
+    if(ex.block && ex.block!==lastBlock){
+      out+="<div class='ex-block-divider'>"+ex.block+"</div>";
+      lastBlock=ex.block;
+    }
+    out+=buildExCard(ex);
+  });
+  return out;
+}
+
 function buildExCard(ex){
   var sets=getExLog(ex.name);
   // Default 3 sets if none logged
@@ -3905,7 +3913,7 @@ function renderTrain(dayIdx){
   html+=trainSection(wuId,'WARM-UP','var(--gold)','<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>',
     getTrainSecOpen(wuId,false), warmup.map(function(i){return buildPrepItem(i,'wu'+dayIdx);}).join(''));
   html+=trainSection(woId,'WORKOUT','var(--green)','<path d="M6.5 6.5h11"/><path d="M6.5 17.5h11"/><path d="M2 10h3v4H2z"/><path d="M19 10h3v4h-3z"/>',
-    getTrainSecOpen(woId,true), exs.map(buildExCard).join(''));
+    getTrainSecOpen(woId,true), buildWorkoutList(exs));
   html+=trainSection(cdId,'COOLDOWN','var(--blue)','<path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>',
     getTrainSecOpen(cdId,false), cooldown.map(function(i){return buildPrepItem(i,'cd'+dayIdx);}).join(''));
 
