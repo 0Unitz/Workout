@@ -1,7 +1,7 @@
 {
   "name": "RPME",
   "short_name": "RPME",
-  "description": "Gamified fitness tracker — RPG mechanics, gacha rewards, body progress",
+  "description": "Gamified fitness tracker - RPG mechanics, gacha rewards, body progress",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

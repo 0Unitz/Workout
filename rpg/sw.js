@@ -1,4 +1,4 @@
-const CACHE = 'rpme-v16';
+const CACHE = 'rpme-v17';
 const FILES = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -32,6 +32,6 @@ self.addEventListener('fetch', e => {
 // Pass-through for in-app habit notifications (the HTML uses postMessage to schedule).
 self.addEventListener('message', e => {
   if (e.data && e.data.type === 'SCHEDULE_NOTIF') {
-    // Placeholder — actual scheduling handled via Notification API in the page or by a future Android bridge.
+    // Placeholder - actual scheduling is handled by the page Notification API or a future Android bridge.
   }
 });

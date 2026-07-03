@@ -2222,6 +2222,18 @@ function openCapLog(id){
 // Helper storage getters/setters
 function ls(k, def){ try{ var v=localStorage.getItem(k); return v!==null?JSON.parse(v):def; }catch(e){ return def; } }
 function lsSet(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+var RPME_STORAGE_PREFIXES = ['rpg_', 'dc_', 'sec_', 'habit_grp_', 'train_sec_'];
+function getRpmeStorageKeys(){
+  var keys = [];
+  for(var i = 0; i < localStorage.length; i++){
+    var k = localStorage.key(i);
+    if(RPME_STORAGE_PREFIXES.some(function(prefix){ return k.indexOf(prefix) === 0; })) keys.push(k);
+  }
+  return keys;
+}
+function clearRpmeStorage(){
+  getRpmeStorageKeys().forEach(function(k){ localStorage.removeItem(k); });
+}
 
 // ═══════════════════════════════════════════════════
 // UNITS
@@ -3958,7 +3970,7 @@ function saveSettings(){
 
 function resetAllData(){
   if(!confirm('Reset ALL data? Cannot be undone.')) return;
-  ['rpg_v2','rpg_records','rpg_streak','rpg_season','rpg_boss','rpg_meas_history','rpg_custom_habits','rpg_workout_log','rpg_group_streaks','rpg_group_streak_dates'].forEach(function(k){ localStorage.removeItem(k); });
+  clearRpmeStorage();
   location.reload();
 }
 
@@ -6644,32 +6656,15 @@ function completeOnboarding(overlay){
 // DATA BACKUP & RESTORE
 // ═══════════════════════════════════════════════════
 
-var BACKUP_KEYS = [
-  'rpg_v2','rpg_records','rpg_streak','rpg_season','rpg_boss',
-  'rpg_meas_history','rpg_custom_habits','rpg_workout_log',
-  'rpg_group_streaks','rpg_group_streak_dates','rpg_habit_streaks',
-  'rpg_habit_streak_dates','rpg_habit_notes','rpg_photos',
-  'rpg_weekly_summary','rpg_hall_of_fame','rpg_theme','rpg_ex_swaps',
-  'rpg_achievements','rpg_supersets_0','rpg_supersets_1','rpg_supersets_2',
-  'rpg_supersets_3','rpg_supersets_4','rpg_supersets_5','rpg_supersets_6',
-  'rpg_walk_log','rpg_soreness','rpg_onboarded','rpg_comeback_challenge',
-  'rpg_capability_records','rpg_sauna_log','rpg_high_vol_weeks',
-  'rpg_deload_dismissed','rpg_boss_defeats',
-];
-
 function exportBackup(){
   var backup = {
-    version: 3,
+    version: 4,
     exportedAt: new Date().toISOString(),
     data: {}
   };
-  BACKUP_KEYS.forEach(function(k){
+  getRpmeStorageKeys().forEach(function(k){
     var v = localStorage.getItem(k);
     if(v !== null) backup.data[k] = v;
-  });
-  // Also grab any dc_ keys (daily challenge completions)
-  Object.keys(localStorage).forEach(function(k){
-    if(k.startsWith('dc_')) backup.data[k] = localStorage.getItem(k);
   });
 
   var json = JSON.stringify(backup, null, 2);
@@ -6701,8 +6696,8 @@ function importBackup(){
         if(!confirm('This will replace ALL your current data with the backup from '+
           new Date(backup.exportedAt).toLocaleDateString()+'. Continue?')) return;
 
-        // Clear existing
-        BACKUP_KEYS.forEach(function(k){ localStorage.removeItem(k); });
+        // Clear existing RPME data, including feature keys added after older backups.
+        clearRpmeStorage();
 
         // Restore
         var count = 0;
