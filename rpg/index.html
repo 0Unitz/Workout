@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#08080f">
 <title>RPME</title>
+<link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;800&family=Roboto+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════
@@ -6768,6 +6769,7 @@ switchTab('today');
 buildSchedEditor();
 recordMeasSnapshot();
 loadChartJs(function(){ if(document.getElementById('hist-body').style.display!=='none') renderHistoryChart(); });
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js'); }
 
 
 
