@@ -3509,7 +3509,9 @@ function applySchedule(){
 }
 
 function getFocusKey(dayIdx, sched){
-  if(dayIdx===3&&isCombatGoal()) return 'movement';
+  // Combat goals run a FIXED weekly structure keyed to the weekday itself,
+  // not the auto-schedule (which sorts selected days and scrambles the mapping).
+  if(isCombatGoal()){ return ({1:'upper',2:'lower',3:'movement',4:'hiit',0:'full'})[dayIdx]||'full'; }
   var fid=(sched&&sched.days&&sched.days[dayIdx])||null;
   if(fid==='upper'||fid==='push'||fid==='pull') return 'upper';
   if(fid==='lower'||fid==='legs') return 'lower';
@@ -3526,6 +3528,9 @@ function getFocusKey(dayIdx, sched){
 // Single source of truth for which exercise list a day serves.
 // Null-safe lookups: FOCUS_TO_DAY.full is 0, so ||-fallbacks silently broke it.
 function getDayExercises(bt, dayIdx, sched){
+  // Combat goals: serve the workout for this weekday directly (arrays are keyed
+  // 1=Mon,2=Tue,3=Wed,4=Thu,0=Sun), ignoring the scrambling auto-schedule.
+  if(isCombatGoal()){ var direct=WORKOUTS[bt]&&WORKOUTS[bt][dayIdx]; if(direct) return direct; }
   var focusId=(sched&&sched.days&&sched.days[dayIdx])||null;
   var exDayIdx=(focusId!=null&&FOCUS_TO_DAY[focusId]!=null)?FOCUS_TO_DAY[focusId]:dayIdx;
   var fbMap={upper:1,lower:2,yoga:3,hiit:4,full:0,movement:3};
@@ -3891,6 +3896,14 @@ function renderTrain(dayIdx){
   var focusKey=getFocusKey(dayIdx,sched);
   var focusObj=FOCUS_OPTIONS.find(function(f){return f.id===focusId;})||{label:DAY_FULL[dayIdx],desc:''};
   if(focusKey==='movement') focusObj={label:'Cardio & Movement',desc:'Fat-burn cardio + footwork — no gym needed, do it at home'};
+  if(isCombatGoal()){
+    var _cl={1:{label:'Gym A — Upper + Cardio',desc:'Pull-ups first, press/row, then 20 min row'},
+             2:{label:'Legs — earn-back day',desc:'Unlocks after 3 straight weeks of Mon + Thu'},
+             3:{label:'Cardio & Movement',desc:'Fat-burn cardio + footwork — home, no gym'},
+             4:{label:'Gym B — Combat + Legs',desc:'Bag rounds, legs, then 20 min row'},
+             0:{label:'Bonus Day',desc:'Optional ruck or long row — zero guilt if skipped'}};
+    if(_cl[dayIdx]) focusObj=_cl[dayIdx];
+  }
   var exs=getDayExercises(bt,dayIdx,sched);
   var warmup=WARMUPS[focusKey]||WARMUPS.full;
   var cooldown=COOLDOWNS[focusKey]||COOLDOWNS.full;
