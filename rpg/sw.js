@@ -1,37 +1,15 @@
-const CACHE = 'rpme-v20';
-const FILES = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+// RPME moved to the site root (/). This stale /rpg/ service worker unregisters
+// itself and has no fetch handler, so /rpg/ falls through to the redirect page
+// instead of serving a cached app copy. It deliberately does NOT delete caches:
+// the 'rpme-v20' cache is shared with the root app and must survive.
+self.addEventListener('install', () => self.skipWaiting());
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-  ));
-  self.clients.claim();
-});
-
-// Cache-first for precached files; runtime-cache CDN assets (Chart.js, fonts)
-// so charts and typography survive offline.
-const RUNTIME_HOSTS = ['cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).then(resp => {
-      const url = new URL(e.request.url);
-      if (resp.ok && RUNTIME_HOSTS.includes(url.hostname)) {
-        const copy = resp.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy));
-      }
-      return resp;
-    }))
-  );
-});
-
-// Pass-through for in-app habit notifications (the HTML uses postMessage to schedule).
-self.addEventListener('message', e => {
-  if (e.data && e.data.type === 'SCHEDULE_NOTIF') {
-    // Placeholder - actual scheduling is handled by the page Notification API or a future Android bridge.
-  }
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    try { await self.registration.unregister(); } catch (e) {}
+    const clients = await self.clients.matchAll({ type: 'window' });
+    for (const client of clients) {
+      try { client.navigate('../'); } catch (e) {}
+    }
+  })());
 });
