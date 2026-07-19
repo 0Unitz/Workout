@@ -1,4 +1,4 @@
-const CACHE = 'rpme-v20';
+const CACHE = 'rpme-v21';
 const FILES = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -6,9 +6,12 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
+// Only prune OUR OWN old caches. CacheStorage is shared across the whole
+// origin, so deleting every non-matching key would nuke the sibling apps'
+// caches (/tracker/ 'workout-*', /meal/ 'meal-*') and break their offline mode.
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    Promise.all(keys.filter(k => k.startsWith('rpme-') && k !== CACHE).map(k => caches.delete(k)))
   ));
   self.clients.claim();
 });
