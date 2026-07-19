@@ -1,5 +1,6 @@
-const CACHE = 'rpme-v22';
-const FILES = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE = 'rpme-v23';
+const FILES = ['./index.html', './manifest.json', './privacy.html',
+               './icon-192.png', './icon-512.png', './icon-512-maskable.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
