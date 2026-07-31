@@ -165,7 +165,8 @@
   .timer-loc-badge { margin-bottom: 8px; }
   .timer-title { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
   .timer-step { font-size: 0.8rem; color: #8fa8a4; margin-bottom: 18px; }
-  .timer-exercise { font-size: 1.3rem; font-weight: 700; color: #4fd6c4; margin-bottom: 18px; min-height: 2.4em; }
+  .timer-exercise { font-size: 1.3rem; font-weight: 700; color: #4fd6c4; margin-bottom: 6px; min-height: 2.4em; }
+  .timer-cue { font-size: 0.85rem; color: #b7c8c5; line-height: 1.4; margin-bottom: 16px; min-height: 2.6em; }
   .timer-clock {
     font-size: 3.2rem;
     font-weight: 800;
@@ -232,6 +233,7 @@
       <div class="timer-title" id="timerTitle"></div>
       <div class="timer-step" id="timerStep"></div>
       <div class="timer-exercise" id="timerExercise"></div>
+      <div class="timer-cue" id="timerCue"></div>
       <div class="timer-clock" id="timerClock">2:00</div>
       <div class="timer-controls">
         <button class="timer-btn secondary" id="pauseBtn">Pause</button>
@@ -279,6 +281,68 @@
     {title:"Goblet Squat Focus", cat:'squat', loc:'away', ex:["Goblet Squats", "Goblet Squat Pulses", "Walking Lunges"]},
     {title:"Outdoor Combo", cat:'combo', loc:'away', ex:["Jump Rope — Steady Pace", "Goblet Squats", "Bodyweight Squat Jumps"]},
   ];
+
+  // Short how-to cues shown during the timer. Keyed by base exercise name —
+  // side/variant suffixes like "— Left" or "(alt. sides)" are stripped before lookup.
+  const HOWTO = {
+    "World's Greatest Stretch": "Big lunge forward, drop your back knee, plant the opposite hand down, then rotate that same-side elbow up toward the ceiling.",
+    "Cat-Cow Flow": "On hands and knees: arch your back and drop your belly (cow), then round your spine and tuck your chin (cat). Keep flowing between the two.",
+    "Big Arm Circles": "Arms straight out to the sides, make big slow circles — forward for a while, then reverse direction.",
+    "Wall Slides": "Back against a wall, arms in a goalpost shape touching the wall. Slide them up overhead and back down, keeping contact with the wall.",
+    "Thoracic Rotations": "On hands and knees, one hand behind your head, rotate that elbow down toward the opposite arm then open up toward the ceiling.",
+    "Ankle Circles + Calf Raises": "Circle each ankle both directions, then do slow calf raises up onto your toes and back down.",
+    "Deep Squat Hold & Rock": "Sink into the deepest squat you can with heels down, hold, and gently rock side to side to open the hips.",
+    "Walking Lunge w/ Twist": "Step into a lunge, and as you lunge rotate your torso toward the front leg, then switch sides as you walk forward.",
+    "Inchworm to Plank": "Bend and walk your hands out to a plank, hold briefly, then walk them back to your feet and roll up to standing.",
+    "Standing Side Bends": "Feet hip-width, reach one arm overhead and lean sideways, feeling the stretch down that side. Alternate sides.",
+    "Scorpion Stretch": "Lie face down, arms out to the sides, and rotate one leg up and across to tap the floor near the opposite hand.",
+    "Standing Hamstring Stretch": "Prop one heel on a chair/desk with leg straight, hinge forward at the hips keeping your back flat until you feel the stretch.",
+    "Seated Figure-4 Stretch": "Sit, cross one ankle over the opposite knee, and hinge forward slightly until you feel it in the crossed hip/glute.",
+    "Doorway Chest Stretch": "Forearm on a doorframe (elbow ~90°), step forward through the doorway until you feel a stretch across your chest.",
+    "Cross-Body Shoulder Stretch": "Pull one straight arm across your chest with the other hand/forearm, keeping the shoulder down.",
+    "Overhead Triceps Stretch": "Reach one arm overhead, bend the elbow so your hand drops behind your head, and gently pull the elbow with the other hand.",
+    "Neck Side Stretch": "Sit tall, drop one ear toward the same-side shoulder, optionally add gentle hand pressure. Switch sides.",
+    "Wrist & Forearm Stretch": "Extend an arm, palm up then palm down, using the other hand to gently pull the fingers back toward you each way.",
+    "Upper Trap Stretch": "Sit on one hand for anchor, tilt your head away and slightly forward until you feel the stretch at the base of your neck.",
+    "Standing Quad Stretch": "Stand on one leg (hold onto the desk for balance), grab the other ankle behind you and pull your heel toward your glute.",
+    "Calf Stretch on Wall": "Hands on a wall, step one foot back with the heel flat and leg straight, lean into the wall until you feel your calf stretch.",
+    "DB Floor Press": "Lie on your back (or mat), dumbbells at chest level, press straight up until arms are extended, then lower with control.",
+    "DB Tricep Kickbacks": "Hinge forward, elbow pinned at your side and bent 90°, extend the forearm straight back, squeezing the tricep.",
+    "Plank Hold": "Forearms and toes on the floor, straight line from head to heels, brace your core and hold.",
+    "DB Bent-Over Rows": "Hinge forward with a flat back, let the dumbbells hang, then pull them up to your ribs squeezing your shoulder blades together.",
+    "DB Renegade Rows": "In a plank with hands on dumbbells, row one dumbbell up to your hip while stabilizing with the other arm, then switch sides.",
+    "Reverse Snow Angels": "Lie face down, arms at your sides, sweep them out and up overhead like a snow angel, squeezing your upper back at the top.",
+    "DB Overhead Press": "Dumbbells at shoulder height, press straight overhead until arms are extended, then lower back to shoulders.",
+    "DB Lateral Raises": "Arms slightly bent, raise the dumbbells out to the sides until they reach shoulder height, then lower slowly.",
+    "DB Front Raises": "Arms slightly bent, raise the dumbbells straight out in front to shoulder height, then lower slowly.",
+    "DB Weighted Glute Bridges": "Lie on your back, knees bent, a dumbbell resting on your hips, drive through your heels to lift your hips up, squeeze, and lower.",
+    "Dead Bug": "Lie on your back, arms up and knees bent at 90°, slowly extend the opposite arm and leg toward the floor while keeping your back flat, then switch.",
+    "Side Plank": "Prop up on one forearm, stack your feet, and lift your hips so your body forms a straight line. Hold, then switch sides.",
+    "DB Bicep Curls": "Arms at your sides, curl the dumbbells up toward your shoulders keeping elbows pinned, then lower with control.",
+    "DB Hammer Curls": "Same as a bicep curl but palms face each other the whole time (neutral grip).",
+    "DB Skull Crushers": "Lying down, arms straight up over your chest, bend only at the elbows to lower the dumbbells toward your forehead, then extend back up.",
+    "DB Thrusters": "Hold dumbbells at your shoulders, squat down, then drive up explosively and press the dumbbells overhead as you stand.",
+    "Mountain Climbers": "In a plank position, drive your knees toward your chest one at a time at a quick pace, keeping your hips level.",
+    "Plank Shoulder Taps": "In a plank, tap one shoulder with the opposite hand without letting your hips rotate, then alternate sides.",
+    "Jump Rope": "Steady, low hops on the balls of your feet — keep turns coming from your wrists, not big arm swings.",
+    "Goblet Squats": "Hold a weight at your chest with both hands, squat down keeping your chest up and knees tracking over your toes, then stand.",
+    "Goblet Squat Pulses": "Same setup as a goblet squat, but hold near the bottom of the squat and do small pulsing movements before standing back up.",
+    "Walking Lunges": "Step forward into a lunge, back knee toward the floor, then bring your back foot through into the next lunge — keep walking forward.",
+    "Bodyweight Squat Jumps": "Squat down, then explode upward into a jump, landing softly back into the next squat.",
+  };
+
+  function baseKey(name){
+    return name
+      .replace(/\s*—\s*(Left|Right).*$/i, '')
+      .replace(/\s*\(alt\. sides\)$/i, '')
+      .replace(/\s*\(each side\)$/i, '')
+      .replace(/\s*—.*$/, '')
+      .trim();
+  }
+
+  function cueFor(name){
+    return HOWTO[baseKey(name)] || HOWTO[name] || '';
+  }
 
   const STATE_KEY = 'breaks_state';
   const LAST_KEY = 'breaks_last';
@@ -413,10 +477,11 @@
   }
 
   function generateMorningBlock(){
-    const mob = sampleUnique(flatten(MOBILITY), 2);
+    // Always leads with the full-body mobility flow (not a random mobility sample).
+    const fullBodyMobility = MOBILITY.find(w => w.title === 'Full Body Flow').ex;
     const str = sampleUnique(flatten(STRETCH), 2);
-    const stg = shuffle(sampleUnique(flatten(STRENGTH), 11));
-    return { title: 'Morning Block', loc: 'desk', ex: [...mob, ...str, ...stg] };
+    const stg = shuffle(sampleUnique(flatten(STRENGTH), 10));
+    return { title: 'Morning Block', loc: 'desk', ex: [...fullBodyMobility, ...str, ...stg] };
   }
 
   document.getElementById('morningBtn').addEventListener('click', () => {
@@ -466,8 +531,10 @@
   }
 
   function updateTimerDisplay(slot){
+    const name = slot.ex[timer.exIndex];
     document.getElementById('timerStep').textContent = `Exercise ${timer.exIndex + 1} of ${slot.ex.length}`;
-    document.getElementById('timerExercise').textContent = slot.ex[timer.exIndex];
+    document.getElementById('timerExercise').textContent = name;
+    document.getElementById('timerCue').textContent = cueFor(name);
     document.getElementById('timerClock').textContent = formatClock(timer.secondsLeft);
   }
 
