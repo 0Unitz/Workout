@@ -1,4 +1,4 @@
-const CACHE = 'breaks-v1';
+const CACHE = 'breaks-v3';
 const ASSETS = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
