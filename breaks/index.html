@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#14B8A6">
+<link rel="manifest" href="manifest.json">
+<title>Micro Break</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #12181a;
+    color: #eef5f4;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  header {
+    background: #103e39;
+    padding: 18px 16px 14px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  header h1 { font-size: 1.3rem; font-weight: 700; color: #fff; }
+  header p { font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 2px; }
+
+  .progress-wrap {
+    padding: 14px 16px 4px;
+  }
+  .progress-track {
+    background: #1d2b2b;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: #14B8A6;
+    height: 100%;
+    width: 0%;
+    transition: width 0.25s ease;
+  }
+  .progress-label {
+    font-size: 0.75rem;
+    color: #9fb3b0;
+    margin-top: 6px;
+    text-align: center;
+  }
+
+  .actions-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px 16px 2px;
+  }
+  .mini-btn {
+    background: none;
+    border: 1px solid #2a3a38;
+    color: #9fb3b0;
+    font-size: 0.72rem;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+
+  #list { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+  .card {
+    background: #1a2626;
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #223330;
+  }
+  .card.done { opacity: 0.55; }
+
+  .check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #3c5a56;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: transparent;
+  }
+  .card.done .check {
+    background: #14B8A6;
+    border-color: #14B8A6;
+    color: #0b1615;
+  }
+
+  .card-body { flex: 1; min-width: 0; }
+  .card-top { display: flex; align-items: center; gap: 8px; }
+  .slot-num { font-size: 0.68rem; color: #6c8380; font-weight: 700; }
+  .card-title { font-size: 0.98rem; font-weight: 700; color: #f0f7f6; }
+  .card.done .card-title { text-decoration: line-through; }
+
+  .badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+  .badge.desk { background: #16342f; color: #4fd6c4; }
+  .badge.away { background: #3a2712; color: #f0a24a; }
+
+  .card-sub {
+    font-size: 0.78rem;
+    color: #93a8a5;
+    margin-top: 3px;
+    line-height: 1.3;
+  }
+
+  .go-btn {
+    flex-shrink: 0;
+    background: #14B8A6;
+    color: #06201c;
+    font-weight: 700;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 12px;
+  }
+  .card.done .go-btn { background: #2a3a38; color: #7f948f; }
+
+  .empty-note {
+    text-align: center;
+    color: #7f948f;
+    font-size: 0.85rem;
+    padding: 30px 20px;
+  }
+
+  /* Timer modal */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6,12,12,0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 20px;
+  }
+  .overlay.open { display: flex; }
+  .timer-card {
+    background: #16211f;
+    border-radius: 20px;
+    padding: 26px 22px 22px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    border: 1px solid #263a37;
+  }
+  .timer-loc-badge { margin-bottom: 8px; }
+  .timer-title { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
+  .timer-step { font-size: 0.8rem; color: #8fa8a4; margin-bottom: 18px; }
+  .timer-exercise { font-size: 1.3rem; font-weight: 700; color: #4fd6c4; margin-bottom: 18px; min-height: 2.4em; }
+  .timer-clock {
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 22px;
+  }
+  .timer-controls { display: flex; gap: 10px; }
+  .timer-btn {
+    flex: 1;
+    padding: 13px 0;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .timer-btn.primary { background: #14B8A6; color: #06201c; }
+  .timer-btn.secondary { background: #223330; color: #cfe4e1; }
+  .timer-btn.close { background: none; color: #7f948f; margin-top: 14px; font-size: 0.8rem; border: none; padding: 6px; width: 100%; }
+
+  .timer-done { display: none; }
+  .timer-done.show { display: block; }
+  .timer-done h2 { color: #14B8A6; font-size: 1.4rem; margin-bottom: 8px; }
+  .timer-done p { color: #9fb3b0; font-size: 0.85rem; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Micro Break</h1>
+  <p>9 six-minute breaks &middot; every 45 min</p>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 / 9 done</div>
+</div>
+
+<div class="actions-row">
+  <button class="mini-btn" id="reshuffleBtn">🔀 Reshuffle today</button>
+  <button class="mini-btn" id="bonusBtn">➕ Extra workout</button>
+  <button class="mini-btn" id="morningBtn">🌅 Morning block (~30 min)</button>
+</div>
+
+<div id="list"></div>
+
+<div class="overlay" id="bonusOverlay">
+  <div class="timer-card">
+    <div class="timer-title" style="margin-bottom:14px">Extra desk workout</div>
+    <div class="timer-controls" style="flex-direction:column;gap:8px">
+      <button class="timer-btn primary" data-pool="mobility">Mobility</button>
+      <button class="timer-btn primary" data-pool="stretch">Stretch</button>
+      <button class="timer-btn primary" data-pool="strength">Strength (dumbbell)</button>
+      <button class="timer-btn primary" data-pool="away">Jump rope / goblet squats</button>
+    </div>
+    <button class="timer-btn close" id="bonusCloseBtn">Cancel</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="timer-card">
+    <div id="timerLive">
+      <div class="timer-loc-badge"><span class="badge" id="timerLocBadge"></span></div>
+      <div class="timer-title" id="timerTitle"></div>
+      <div class="timer-step" id="timerStep"></div>
+      <div class="timer-exercise" id="timerExercise"></div>
+      <div class="timer-clock" id="timerClock">2:00</div>
+      <div class="timer-controls">
+        <button class="timer-btn secondary" id="pauseBtn">Pause</button>
+        <button class="timer-btn primary" id="skipBtn">Skip</button>
+      </div>
+    </div>
+    <div class="timer-done" id="timerDone">
+      <h2>Nice work 💪</h2>
+      <p id="timerDoneSub"></p>
+      <button class="timer-btn primary" id="doneCloseBtn" style="width:100%">Done</button>
+    </div>
+    <button class="timer-btn close" id="closeBtn">Close without finishing</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const MOBILITY = [
+    {title:"Hip & Spine Reset", cat:'mobility', loc:'desk', ex:["World's Greatest Stretch — Left", "World's Greatest Stretch — Right", "Cat-Cow Flow"]},
+    {title:"Shoulder Mobility", cat:'mobility', loc:'desk', ex:["Big Arm Circles", "Wall Slides", "Thoracic Rotations (alt. sides)"]},
+    {title:"Lower Body Mobility", cat:'mobility', loc:'desk', ex:["Ankle Circles + Calf Raises", "Deep Squat Hold & Rock", "Walking Lunge w/ Twist"]},
+    {title:"Full Body Flow", cat:'mobility', loc:'desk', ex:["Inchworm to Plank", "Standing Side Bends", "Scorpion Stretch (alt. sides)"]},
+  ];
+
+  const STRETCH = [
+    {title:"Hamstrings & Hips", cat:'stretch', loc:'desk', ex:["Standing Hamstring Stretch — Left", "Standing Hamstring Stretch — Right", "Seated Figure-4 Stretch"]},
+    {title:"Chest & Shoulders", cat:'stretch', loc:'desk', ex:["Doorway Chest Stretch", "Cross-Body Shoulder Stretch", "Overhead Triceps Stretch"]},
+    {title:"Neck & Wrists", cat:'stretch', loc:'desk', ex:["Neck Side Stretch (alt. sides)", "Wrist & Forearm Stretch", "Upper Trap Stretch"]},
+    {title:"Quads & Calves", cat:'stretch', loc:'desk', ex:["Standing Quad Stretch — Left", "Standing Quad Stretch — Right", "Calf Stretch on Wall"]},
+  ];
+
+  const STRENGTH = [
+    {title:"Push Focus", cat:'strength', loc:'desk', ex:["DB Floor Press", "DB Tricep Kickbacks", "Plank Hold"]},
+    {title:"Pull Focus", cat:'strength', loc:'desk', ex:["DB Bent-Over Rows", "DB Renegade Rows", "Reverse Snow Angels"]},
+    {title:"Shoulders", cat:'strength', loc:'desk', ex:["DB Overhead Press", "DB Lateral Raises", "DB Front Raises"]},
+    {title:"Core & Glutes", cat:'strength', loc:'desk', ex:["DB Weighted Glute Bridges", "Dead Bug", "Side Plank (each side)"]},
+    {title:"Arms", cat:'strength', loc:'desk', ex:["DB Bicep Curls", "DB Hammer Curls", "DB Skull Crushers"]},
+    {title:"Full Body", cat:'strength', loc:'desk', ex:["DB Thrusters", "Mountain Climbers", "Plank Shoulder Taps"]},
+  ];
+
+  const AWAY = [
+    {title:"Jump Rope Intervals", cat:'jumprope', loc:'away', ex:["Jump Rope — Steady Pace", "Jump Rope — High Knees", "Jump Rope — Fast Feet"]},
+    {title:"Goblet Squat Focus", cat:'squat', loc:'away', ex:["Goblet Squats", "Goblet Squat Pulses", "Walking Lunges"]},
+    {title:"Outdoor Combo", cat:'combo', loc:'away', ex:["Jump Rope — Steady Pace", "Goblet Squats", "Bodyweight Squat Jumps"]},
+  ];
+
+  const STATE_KEY = 'breaks_state';
+  const LAST_KEY = 'breaks_last';
+  const EXERCISE_SECONDS = 120;
+
+  function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+  function pickOne(arr, avoidTitle){
+    const opts = arr.filter(x => x.title !== avoidTitle);
+    const pool = opts.length ? opts : arr;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function shuffle(arr){
+    for (let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function generateDay(){
+    const last = JSON.parse(localStorage.getItem(LAST_KEY) || '{}');
+
+    const mob = pickOne(MOBILITY, last.mobility);
+    const str = pickOne(STRETCH, last.stretch);
+
+    // Remaining 7 slots are drawn freely from strength + away combined —
+    // away isn't rationed, so jump rope / goblet squats can show up as often as they land.
+    const FLEX_POOL = STRENGTH.concat(AWAY);
+    const rest = [];
+    const used = [];
+    for (let i = 0; i < 7; i++){
+      let opts = FLEX_POOL.filter(x => !used.includes(x.title));
+      if (!opts.length){ opts = FLEX_POOL; used.length = 0; }
+      const chosen = opts[Math.floor(Math.random() * opts.length)];
+      used.push(chosen.title);
+      rest.push(chosen);
+    }
+
+    // Mobility, then stretch, always lead off the day; the rest shuffle freely after.
+    shuffle(rest);
+    const slots = [mob, str, ...rest];
+    localStorage.setItem(LAST_KEY, JSON.stringify({ mobility: mob.title, stretch: str.title }));
+
+    return slots.map((s, i) => ({ ...s, id: i, done: false }));
+  }
+
+  function loadState(){
+    let state;
+    try { state = JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); } catch (e) { state = null; }
+    if (!state || state.date !== todayStr()){
+      state = { date: todayStr(), slots: generateDay() };
+      saveState(state);
+    }
+    return state;
+  }
+
+  function saveState(state){
+    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+
+  function render(){
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    state.slots.forEach(slot => {
+      const card = document.createElement('div');
+      card.className = 'card' + (slot.done ? ' done' : '');
+      card.innerHTML = `
+        <div class="check">${slot.done ? '✓' : ''}</div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="slot-num">#${slot.id + 1}</span>
+            <span class="card-title">${slot.title}</span>
+            <span class="badge ${slot.loc}">${slot.loc}</span>
+          </div>
+          <div class="card-sub">${slot.ex.join(' · ')}</div>
+        </div>
+        <button class="go-btn" data-id="${slot.id}">${slot.done ? 'Redo' : 'Go'}</button>
+      `;
+      card.querySelector('.check').addEventListener('click', () => toggleDone(slot.id));
+      card.querySelector('.go-btn').addEventListener('click', () => openTimer({ ...slot, scheduled: true }));
+      list.appendChild(card);
+    });
+
+    const doneCount = state.slots.filter(s => s.done).length;
+    document.getElementById('progressFill').style.width = (doneCount / state.slots.length * 100) + '%';
+    document.getElementById('progressLabel').textContent = `${doneCount} / ${state.slots.length} done`;
+  }
+
+  function toggleDone(id){
+    const slot = state.slots.find(s => s.id === id);
+    slot.done = !slot.done;
+    saveState(state);
+    render();
+  }
+
+  document.getElementById('reshuffleBtn').addEventListener('click', () => {
+    if (confirm("Reshuffle today's 9 breaks? This resets progress for today.")){
+      state = { date: todayStr(), slots: generateDay() };
+      saveState(state);
+      render();
+    }
+  });
+
+  // ---- Bonus (unscheduled) workouts ----
+  const POOLS = { mobility: MOBILITY, stretch: STRETCH, strength: STRENGTH, away: AWAY };
+
+  document.getElementById('bonusBtn').addEventListener('click', () => {
+    document.getElementById('bonusOverlay').classList.add('open');
+  });
+  document.getElementById('bonusCloseBtn').addEventListener('click', () => {
+    document.getElementById('bonusOverlay').classList.remove('open');
+  });
+  document.querySelectorAll('#bonusOverlay [data-pool]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pool = POOLS[btn.dataset.pool];
+      const slot = { ...pool[Math.floor(Math.random() * pool.length)], id: null };
+      document.getElementById('bonusOverlay').classList.remove('open');
+      openTimer(slot);
+    });
+  });
+
+  // ---- Morning block: one longer desk-only session, no going outside ----
+  function flatten(pool){ return pool.flatMap(w => w.ex); }
+
+  function sampleUnique(arr, n){
+    const copy = shuffle([...arr]);
+    return copy.slice(0, Math.min(n, copy.length));
+  }
+
+  function generateMorningBlock(){
+    const mob = sampleUnique(flatten(MOBILITY), 2);
+    const str = sampleUnique(flatten(STRETCH), 2);
+    const stg = shuffle(sampleUnique(flatten(STRENGTH), 11));
+    return { title: 'Morning Block', loc: 'desk', ex: [...mob, ...str, ...stg] };
+  }
+
+  document.getElementById('morningBtn').addEventListener('click', () => {
+    openTimer(generateMorningBlock());
+  });
+
+  // ---- Timer ----
+  let timer = { slot: null, exIndex: 0, secondsLeft: EXERCISE_SECONDS, running: false, tickHandle: null };
+
+  function beep(){
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = 880;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      osc.stop(ctx.currentTime + 0.35);
+    } catch (e) { /* audio not available, silently ignore */ }
+    if (navigator.vibrate) navigator.vibrate(200);
+  }
+
+  function formatClock(sec){
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  function openTimer(slot){
+    timer.slot = slot;
+    timer.exIndex = 0;
+    timer.secondsLeft = EXERCISE_SECONDS;
+    timer.running = true;
+
+    document.getElementById('timerLive').style.display = 'block';
+    document.getElementById('timerDone').classList.remove('show');
+    document.getElementById('timerLocBadge').textContent = slot.loc;
+    document.getElementById('timerLocBadge').className = 'badge ' + slot.loc;
+    document.getElementById('timerTitle').textContent = slot.title;
+    document.getElementById('pauseBtn').textContent = 'Pause';
+    updateTimerDisplay(slot);
+    document.getElementById('overlay').classList.add('open');
+    startTick(slot);
+  }
+
+  function updateTimerDisplay(slot){
+    document.getElementById('timerStep').textContent = `Exercise ${timer.exIndex + 1} of ${slot.ex.length}`;
+    document.getElementById('timerExercise').textContent = slot.ex[timer.exIndex];
+    document.getElementById('timerClock').textContent = formatClock(timer.secondsLeft);
+  }
+
+  function startTick(slot){
+    clearInterval(timer.tickHandle);
+    timer.tickHandle = setInterval(() => {
+      if (!timer.running) return;
+      timer.secondsLeft--;
+      if (timer.secondsLeft <= 0){
+        advanceExercise(slot);
+      } else {
+        document.getElementById('timerClock').textContent = formatClock(timer.secondsLeft);
+      }
+    }, 1000);
+  }
+
+  function advanceExercise(slot){
+    beep();
+    timer.exIndex++;
+    if (timer.exIndex >= slot.ex.length){
+      finishTimer(slot);
+      return;
+    }
+    timer.secondsLeft = EXERCISE_SECONDS;
+    updateTimerDisplay(slot);
+  }
+
+  function finishTimer(slot){
+    clearInterval(timer.tickHandle);
+    document.getElementById('timerLive').style.display = 'none';
+
+    if (slot.scheduled){
+      const real = state.slots.find(s => s.id === slot.id);
+      real.done = true;
+      saveState(state);
+      render();
+      document.getElementById('timerDoneSub').textContent = `${slot.title} complete — that's ${state.slots.filter(s=>s.done).length} of 9 today.`;
+    } else if (slot.title === 'Morning Block'){
+      document.getElementById('timerDoneSub').textContent = `Morning block complete — solid start to the day.`;
+    } else {
+      document.getElementById('timerDoneSub').textContent = `${slot.title} complete — nice extra effort!`;
+    }
+    document.getElementById('timerDone').classList.add('show');
+  }
+
+  document.getElementById('pauseBtn').addEventListener('click', () => {
+    timer.running = !timer.running;
+    document.getElementById('pauseBtn').textContent = timer.running ? 'Pause' : 'Resume';
+  });
+
+  document.getElementById('skipBtn').addEventListener('click', () => {
+    advanceExercise(timer.slot);
+  });
+
+  function closeOverlay(){
+    clearInterval(timer.tickHandle);
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  document.getElementById('closeBtn').addEventListener('click', closeOverlay);
+  document.getElementById('doneCloseBtn').addEventListener('click', closeOverlay);
+
+  render();
+
+  if ('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+})();
+</script>
+</body>
+</html>
